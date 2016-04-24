@@ -1,0 +1,10 @@
+{
+  "parser": "babel-eslint",
+  "rules": {
+    "camelcase": 2,
+    "indent": [2, 4],
+    "semi": [2, "never"],
+    "quotes": [2, "double"],
+    "brace-style": [2, "1tbs"]
+  }
+}
