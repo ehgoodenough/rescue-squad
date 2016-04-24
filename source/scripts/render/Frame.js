@@ -1,6 +1,6 @@
 import React from "react"
 
-export default class AspectRatioFrame extends React.Component {
+export default class Frame extends React.Component {
     render() {
         return (
             <div className="frame" style={this.style}>
@@ -19,7 +19,7 @@ export default class AspectRatioFrame extends React.Component {
             overflow: "hidden",
             width: this.props.frame.width + "px",
             height: this.props.frame.height + "px",
-            backgroundColor: this.props.color || "#222",
+            backgroundColor: this.props.frame.color || "#222",
             transform: "scale(" + Math.min(
                 window.innerWidth / this.props.frame.width,
                 window.innerHeight / this.props.frame.height

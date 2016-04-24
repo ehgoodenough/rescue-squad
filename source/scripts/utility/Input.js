@@ -48,12 +48,10 @@ document.addEventListener("keydown", function(event) {
     if(Keyb.isUp(vkey[event.keyCode])) {
         Keyb.setDown(vkey[event.keyCode])
     }
-    event.preventDefault()
 })
 
 document.addEventListener("keyup", function(event) {
     Keyb.setUp(vkey[event.keyCode])
-    event.preventDefault()
 })
 
 export default Keyb
