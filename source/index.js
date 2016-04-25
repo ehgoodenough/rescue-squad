@@ -29,7 +29,7 @@ class Ground {
             {x: +0, y: -2},
         ]
         this.points = new Array()
-        for(var x = 0, y = 0; x <= 21; x = x) {
+        for(var x = 0, y = 0; x <= 23; x = x) {
             this.points.push({
                 x: x * U,
                 y: (y * U) + (BUFFER / 2) + (i * (2 * U)) + (i * O)
@@ -42,21 +42,119 @@ class Ground {
     }
     getMovements(y) {
         var movements = []
-        if(y == 0 || y == 1) {
-            movements.push({x: +1, y: +1})
+        this.flip = !this.flip
+        if(this.flip) {
+            if(y == 0 || y == 1) {
+                movements.push({x: +1, y: +1})
+            }
+            if(y == 1 || y == 2) {
+                movements.push({x: +1, y: -1})
+            }
+            if(y == 0) {
+                movements.push({x: +0, y: +2})
+            }
+            if(y == 2) {
+                movements.push({x: +0, y: -2})
+            }
+        } else {
+            movements.push({x: +1, y: +0})
+            movements.push({x: +2, y: +0})
+            movements.push({x: +3, y: +0})
+            movements.push({x: +4, y: +0})
         }
-        if(y == 1 || y == 2) {
-            movements.push({x: +1, y: -1})
-        }
-        if(y == 0) {
-            movements.push({x: +0, y: +2})
-        }
-        if(y == 2) {
-            movements.push({x: +0, y: -2})
-        }
-        movements.push({x: +2, y: +0})
-        movements.push({x: +1, y: +0})
         return movements
+    }
+    y(x) {
+        for(var i = 1; i < this.points.length; i++) {
+            var a = this.points[i - 1], b = this.points[i]
+            if(a.x < x && b.x > x) {
+                var slope = (b.y - a.y) / (b.x - a.x)
+                return slope * (x - a.x) + a.y
+            }
+        }
+        return 76
+    }
+}
+
+const FRICTION = 0.5
+const GRAVITY = 0.75
+
+class Player {
+    constructor(player) {
+        this.position = player.position
+        this.width = player.width
+        this.height = player.height
+        this.color = player.color
+
+        this.jumpforce = -10
+        this.moveforce = +5
+
+        this.acceleration = 5
+        this.velocity = {x: 0, y: 0}
+        this.direction = {x: 0, y: 0}
+        this.maxvelocity = 5
+
+        this.jumpheight = 0
+    }
+    update(delta) {
+        // poll for movement
+        if(Input.isDown("A")
+        || Input.isDown("<left>")) {
+            this.direction.x = -1
+            this.velocity.x -= this.acceleration
+            if(this.velocity.x < -this.maxvelocity) {
+                this.velocity.x = -this.maxvelocity
+            }
+        } if(Input.isDown("D")
+        || Input.isDown("<right>")) {
+            this.direction.x = +1
+            this.velocity.x += this.acceleration
+            if(this.velocity.x > +this.maxvelocity) {
+                this.velocity.x = +this.maxvelocity
+            }
+        }
+
+        // poll for jumping
+        if(Input.isDown("W")
+        || Input.isDown("<up>")) {
+            if(this.jumpheight == 0) {
+                this.velocity.y = this.jumpforce
+            }
+        }
+
+        // acceleration from gravity
+        this.velocity.y += GRAVITY
+
+        // collision with the edges of the camera
+        this.todo = "collision with the edges of the camera"
+
+        // collision with the world
+        this.position.y = state.grounds[0].y(this.position.x + this.velocity.x)
+        this.velocity.y = 0
+        // if(this.position.y + this.velocity.y > 76) {
+        //     this.position.y = 76
+        //     this.velocity.y = 0
+        //     this.jumpheight = 0
+        // }
+
+        // translation from velocity
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+
+        // track the distance of a jump
+        this.jumpheight += this.velocity.y
+
+        // deceleration from friction
+        this.velocity.x *= 0.1
+
+        // collision with other entities
+        this.todo = "collision with other entities"
+
+        // conveyance via rendering
+        this.todo = "conveyance via rendering"
+
+        this.todo = "delta optimization"
+        this.todo = "parent access to other objects"
     }
 }
 
@@ -69,84 +167,20 @@ var state = {
         height: 360,
         color: colors[0]
     },
-    player: {
+    player: new Player({
         position: {x: U * 4, y: U * 3},
         width: U * 0.5, height: U * 0.5,
         color: "#FFF"
-    },
+    }),
     grounds: [
         new Ground(0),
         new Ground(1),
         new Ground(2),
-    ],
-    oldgrounds: [
-        {
-            color: colors[1],
-            points: [
-                {x: U * 0, y: U * 3 + 0},
-                {x: U * 2, y: U * 3 + 0},
-                {x: U * 3, y: U * 4 + 0},
-                {x: U * 5, y: U * 4 + 0},
-                {x: U * 5, y: U * 2 + 0},
-                {x: U * 7, y: U * 2 + 0},
-                {x: U * 8, y: U * 3 + 0},
-                {x: U * 10, y: U * 3 + 0},
-                {x: U * 12, y: U * 3 + 0},
-                {x: U * 13, y: U * 4 + 0},
-                {x: U * 15, y: U * 4 + 0},
-                {x: U * 15, y: U * 2 + 0},
-                {x: U * 17, y: U * 2 + 0},
-                {x: U * 17, y: U * 4 + 0},
-            ]
-        },
-        {
-            color: colors[2],
-            points: [
-                {x: U * 0, y: U * 4 + O},
-                {x: U * 3 + O, y: U * 4 + O},
-                {x: U * 3 + O, y: U * 6 + O},
-                {x: U * 5 + O, y: U * 6 + O},
-                {x: U * 6 + O, y: U * 5 + O},
-                {x: U * 8 + O, y: U * 5 + O},
-                {x: U * 9 + O, y: U * 6 + O},
-                {x: U * 13 + O, y: U * 6 + O},
-                {x: U * 14 + O, y: U * 5 + O},
-                {x: U * 16 + O, y: U * 5 + O},
-                {x: U * 17 + O, y: U * 4 + O},
-            ]
-        },
-        {
-            color: colors[3],
-            points: [
-                {x: U * 0, y: U * 8 + (2 * O)},
-                {x: U * 2 + (2 + O), y: U * 8 + (2 * O)},
-                {x: U * 3 + (2 + O), y: U * 7 + (2 * O)},
-                {x: U * 5 + (2 + O), y: U * 7 + (2 * O)},
-                {x: U * 6 + (2 + O), y: U * 6 + (2 * O)},
-                {x: U * 8 + (2 + O), y: U * 6 + (2 * O)},
-                {x: U * 8 + (2 + O), y: U * 8 + (2 * O)},
-                {x: U * 12 + (2 + O), y: U * 8 + (2 * O)},
-                {x: U * 13 + (2 + O), y: U * 7 + (2 * O)},
-                {x: U * 16 + (2 + O), y: U * 7 + (2 * O)},
-            ]
-        }
     ]
 }
 
 var loop = new Loop(function(delta) {
-    if(Input.isDown("W")
-    || Input.isDown("<up>")) {
-        entity.y -= entity.speed * delta
-    } if(Input.isDown("S")
-    || Input.isDown("<down>")) {
-        entity.y += entity.speed * delta
-    } if(Input.isDown("A")
-    || Input.isDown("<left>")) {
-        entity.x -= entity.speed * delta
-    } if(Input.isDown("D")
-    || Input.isDown("<right>")) {
-        entity.x += entity.speed * delta
-    }
+    state.player.update(delta)
     render.setState(state)
 })
 
@@ -159,14 +193,19 @@ if(STAGE == "PRODUCTION") {
     })
 }
 
-// fix ratio of tiles and layers and stuff
-// figure out the color gradients
-// generate the grounds yourself
-// - do not let grounds cross each other
-// - move forward 2, slope up or down 1, or ledge up or down 2
+// start the player on the top
+// move the player along whatever layer they're on
+// let player jump and land on same layer
+// let player jump and fall to next layer
+// scroll the camera on a fixed speed for the player
 // use parallax on different grounds; use in collision
-// have little trees as background children
 // fall, jump, grab ledge, fall too far (> 2 levels), shoot, collect dogs, dog movies
 // throw rope or deploy parachute. hit wall or lose dog, game over
+// asthetics
+// figure out the color gradients
+// have little trees as background children
+// select more colors for other stages
+// polish
+// highscores, both local and global
 
 // http://www.colourpod.com/post/143168958975/paws-submitted-by-salison-5b5b78-8a86a5
