@@ -20,14 +20,6 @@ const BUFFER = 360 - (((2 + 2 + 2) * U) + O + O)
 class Ground {
     constructor(i) {
         this.color = colors[i+1]
-        var pattern = [
-            {x: +2, y: 0},
-            {x: +1, y: +1},
-            {x: +2, y: 0},
-            {x: +1, y: +1},
-            {x: +2, y: 0},
-            {x: +0, y: -2},
-        ]
         this.points = new Array()
         for(var x = 0, y = 0; x <= 23; x = x) {
             this.points.push({
@@ -67,12 +59,11 @@ class Ground {
     y(x) {
         for(var i = 1; i < this.points.length; i++) {
             var a = this.points[i - 1], b = this.points[i]
-            if(a.x < x && b.x > x) {
+            if(a.x <= x && b.x > x) {
                 var slope = (b.y - a.y) / (b.x - a.x)
                 return slope * (x - a.x) + a.y
             }
         }
-        return 76
     }
 }
 
@@ -129,13 +120,14 @@ class Player {
         this.todo = "collision with the edges of the camera"
 
         // collision with the world
-        this.position.y = state.grounds[0].y(this.position.x + this.velocity.x)
-        this.velocity.y = 0
-        // if(this.position.y + this.velocity.y > 76) {
-        //     this.position.y = 76
-        //     this.velocity.y = 0
-        //     this.jumpheight = 0
-        // }
+        var ground = state.grounds[0]
+        var y = ground.y(this.position.x + this.velocity.x)
+        if(this.position.y + this.velocity.y > y) {
+            var isCliff = Math.abs(this.position.y - y) > 16
+            this.position.y = y
+            this.velocity.y = 0
+            this.jumpheight = 0
+        }
 
         // translation from velocity
         this.position.x += this.velocity.x
@@ -145,7 +137,7 @@ class Player {
         this.jumpheight += this.velocity.y
 
         // deceleration from friction
-        this.velocity.x *= 0.1
+        this.velocity.x *= 0.5
 
         // collision with other entities
         this.todo = "collision with other entities"
@@ -168,7 +160,7 @@ var state = {
         color: colors[0]
     },
     player: new Player({
-        position: {x: U * 4, y: U * 3},
+        position: {x: U * 4, y: U * 2},
         width: U * 0.5, height: U * 0.5,
         color: "#FFF"
     }),
