@@ -68,7 +68,7 @@ class Ground {
 }
 
 const FRICTION = 0.5
-const GRAVITY = 0.75
+const GRAVITY = 0.8
 
 class Player {
     constructor(player) {
@@ -77,7 +77,7 @@ class Player {
         this.height = player.height
         this.color = player.color
 
-        this.jumpforce = -10
+        this.jumpforce = -9
         this.moveforce = +5
 
         this.acceleration = 5
@@ -117,14 +117,31 @@ class Player {
         this.velocity.y += GRAVITY
 
         // collision with the edges of the camera
-        this.todo = "collision with the edges of the camera"
+        // this.todo = "collision with the edges of the camera"
+
+        // this.velocity.x = 0
+        // this.velocity.y = 0
+        // if(Input.isDown("W") || Input.isDown("<up>")) {
+        //     this.velocity.y -= this.acceleration
+        // } if(Input.isDown("S") || Input.isDown("<down>")) {
+        //     this.velocity.y += this.acceleration
+        // } if(Input.isDown("A") || Input.isDown("<left>")) {
+        //     this.velocity.x -= this.acceleration
+        // } if(Input.isDown("D") || Input.isDown("<right>")) {
+        //     this.velocity.x += this.acceleration
+        // }
 
         // collision with the world
-        var ground = state.grounds[0]
-        var y = ground.y(this.position.x + this.velocity.x)
-        if(this.position.y + this.velocity.y > y) {
-            var isCliff = Math.abs(this.position.y - y) > 16
-            this.position.y = y
+        var ground = state.grounds[1]
+        if(this.position.y > ground.y(this.position.x + this.velocity.x)) {
+            if(Math.abs(this.position.y - ground.y(this.position.x + this.velocity.x)) < 7) {
+                this.position.y = ground.y(this.position.x + this.velocity.x)
+            } else {
+                this.velocity.x = 0
+            }
+        }
+        if(this.position.y + this.velocity.y > ground.y(this.position.x + this.velocity.x)) {
+            this.position.y = ground.y(this.position.x + this.velocity.x)
             this.velocity.y = 0
             this.jumpheight = 0
         }
@@ -133,20 +150,20 @@ class Player {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        // track the distance of a jump
+        // measure the distance of a jump
         this.jumpheight += this.velocity.y
 
         // deceleration from friction
-        this.velocity.x *= 0.5
+        this.velocity.x *= FRICTION
 
         // collision with other entities
-        this.todo = "collision with other entities"
+        // this.todo = "collision with other entities"
 
         // conveyance via rendering
-        this.todo = "conveyance via rendering"
+        // this.todo = "conveyance via rendering"
 
-        this.todo = "delta optimization"
-        this.todo = "parent access to other objects"
+        // this.todo = "delta optimization"
+        // this.todo = "parent access to other objects"
     }
 }
 
