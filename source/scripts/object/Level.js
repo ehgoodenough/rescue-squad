@@ -18,22 +18,23 @@ export default class Level {
         }
     }
     getMovements(y) {
-        var movements = []
-        this.flip = !this.flip
-        if(this.flip) {
+        this.state = !this.state
+        var movements = new Array()
+        if(!!this.state) {
             if(y == 0 || y == 1) {
                 movements.push({x: +1, y: +1})
             }
             if(y == 1 || y == 2) {
                 movements.push({x: +1, y: -1})
             }
-            if(y == 0) {
+            if(y == 0 && Math.random() < 0.25) {
                 movements.push({x: +0, y: +2})
             }
-            if(y == 2) {
+            if(y == 2 && Math.random() < 0.25) {
                 movements.push({x: +0, y: -2})
             }
-        } else {
+        }
+        if(!this.state || movements.length == 0) {
             movements.push({x: +1, y: +0})
             movements.push({x: +2, y: +0})
             movements.push({x: +3, y: +0})
