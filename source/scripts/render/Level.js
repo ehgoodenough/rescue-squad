@@ -1,6 +1,6 @@
 import React from "react"
 
-export default class Ground extends React.Component {
+export default class Level extends React.Component {
     render() {
         return (
             <svg>
@@ -9,10 +9,10 @@ export default class Ground extends React.Component {
         )
     }
     get fill() {
-        return this.props.ground.color || "#444"
+        return this.props.level.color || "#444"
     }
     get points() {
-        return this.props.ground.points.concat([
+        return this.props.level.points.concat([
             {x: this.props.frame.width, y: this.props.frame.height},
             {x: 0, y: this.props.frame.height},
         ]).map((point) => {
