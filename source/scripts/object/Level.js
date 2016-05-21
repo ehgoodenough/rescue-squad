@@ -3,44 +3,27 @@ const OFFSET = 8 // gap between each level
 const BUFFER = 360 - (((2 + 2 + 2) * UNIT) + OFFSET + OFFSET)
 
 export default class Level {
-    constructor(i, color) {
+    constructor(level, color, vectors) {
         this.color = color
         this.points = new Array()
-        for(var x = 0, y = 0; x <= 23; x = x) {
+        for(var x = 0, y = 1; x <= 23; x = x) {
+            var vector = 0
+            if(vectors.length > 0) {
+                vector = vectors.shift()
+            }
+
             this.points.push({
                 x: x * UNIT,
-                y: (y * UNIT) + (BUFFER / 2) + (i * (2 * UNIT)) + (i * OFFSET)
+                y: (y * UNIT) + (BUFFER / 2) + (level * (2 * UNIT)) + (level * OFFSET)
             })
-            var movements = this.getMovements(y)
-            var movement = movements[Math.floor(Math.random() * movements.length)]
-            x += movement.x
-            y += movement.y
-        }
-    }
-    getMovements(y) {
-        this.state = !this.state
-        var movements = new Array()
-        if(!!this.state) {
-            if(y == 0 || y == 1) {
-                movements.push({x: +1, y: +1})
-            }
-            if(y == 1 || y == 2) {
-                movements.push({x: +1, y: -1})
-            }
-            if(y == 0 && Math.random() < 0.25) {
-                movements.push({x: +0, y: +2})
-            }
-            if(y == 2 && Math.random() < 0.25) {
-                movements.push({x: +0, y: -2})
+
+            if(isNaN(vector)) {
+                y += parseInt(vector + "2")
+            } else {
+                x += 1
+                y += vector
             }
         }
-        if(!this.state || movements.length == 0) {
-            movements.push({x: +1, y: +0})
-            movements.push({x: +2, y: +0})
-            movements.push({x: +3, y: +0})
-            movements.push({x: +4, y: +0})
-        }
-        return movements
     }
     y(x) {
         for(var i = 1; i < this.points.length; i++) {
@@ -52,3 +35,29 @@ export default class Level {
         }
     }
 }
+
+// function getNextMovement(y) {
+//     this.state = !this.state
+//     var movements = new Array()
+//     if(!!this.state) {
+//         if(y == 0 || y == 1) {
+//             movements.push({x: +1, y: +1})
+//         }
+//         if(y == 1 || y == 2) {
+//             movements.push({x: +1, y: -1})
+//         }
+//         if(y == 0 && Math.random() < 0.25) {
+//             movements.push({x: +0, y: +2})
+//         }
+//         if(y == 2 && Math.random() < 0.25) {
+//             movements.push({x: +0, y: -2})
+//         }
+//     }
+//     if(!this.state || movements.length == 0) {
+//         movements.push({x: +1, y: +0})
+//         movements.push({x: +2, y: +0})
+//         movements.push({x: +3, y: +0})
+//         movements.push({x: +4, y: +0})
+//     }
+//     return movements
+// }

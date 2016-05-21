@@ -1,12 +1,12 @@
 {
-  "name": "rescue-squad",
+  "name": "rescue-the-beagles",
   "version": "0.0.0",
-  "description": "Rescue them all!!",
+  "description": "A remake of 16x16's Rescue the Beagles",
   "author": "Andrew McPherson <@ehgoodenough>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ehgoodenough"
+    "url": "https://github.com/ehgoodenough/rescue-the-beagles"
   },
   "dependencies": {
     "afloop": "^1.0.1",

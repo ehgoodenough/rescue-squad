@@ -17,9 +17,21 @@ export default class Game {
             color: "#FFF"
         }))
         this.add("levels", [
-            new Level(0, colors[1]),
-            new Level(1, colors[2]),
-            new Level(2, colors[3]),
+            new Level(0, colors[1], [
+                0, +1, 0, 0, 0, -1, -1, 0,
+                0, "+", 0, 0, 0, 0, -1, 0,
+                -1, 0, 0, +1, 0,
+            ]),
+            new Level(1, colors[2], [
+                0, -1, 0, 0, +1, 0, +1,
+                0, 0, 0, 0, -1, 0, 0, 0,
+                +1, 0, 0, "-",
+            ]),
+            new Level(2, colors[3], [
+                0, 0, "+", 0, 0, 0, -1, 0,
+                0, 0, -1, 0, 0, +1, 0,
+                +1, 0, 0, -1, -1, 0, 0
+            ]),
         ])
 
         this.frame = {
