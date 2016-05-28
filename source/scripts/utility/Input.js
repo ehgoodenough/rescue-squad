@@ -2,46 +2,21 @@ import vkey from "vkey"
 
 var Keyb = {
     isDown: function(key) {
-        if(this.data[key] == undefined) {
-            this.data[key] = -1
-        }
-        return this.data[key] >= 0
-    },
-    isJustDown: function(key) {
-        if(this.data[key] == undefined) {
-            this.data[key] = -1
-        }
-        if(this.data[key] == 0) {
-            this.data[key] += 1
-            return true
-        } else {
-            return false
-        }
+        return !!this.data[key]
     },
     isUp: function(key) {
-        if(this.data[key] == undefined) {
-            this.data[key] = -1
-        }
-        return this.data[key] <= 0
+        return !this.data[key]
     },
-    isJustUp: function(key) {
-        if(this.data[key] == undefined) {
-            this.data[key] = -1
-        }
-        if(this.data[key] == -1) {
-            this.data[key] -= 1
-            return true
-        } else {
-            return false
-        }
+    isJustDown: function(key, delta) {
+        return window.performance.now() - this.data[key] < delta
     },
     setDown: function(key) {
-        this.data[key] = 0
+        this.data[key] = window.performance.now()
     },
     setUp: function(key) {
-        this.data[key] = -1
+        delete this.data[key]
     },
-    data: new Object()
+    data: {}
 }
 
 document.addEventListener("keydown", function(event) {
@@ -66,14 +41,17 @@ class Input {
     static isDown(input) {
         return Keyb.isDown(input)
     }
+    static isJustDown(input, delta) {
+        return Keyb.isJustDown(input, delta)
+    }
     isDown() {
         return this.inputs.some((input) => {
             return Keyb.isDown(input)
         })
     }
-    isJustDown() {
+    isJustDown(delta) {
         return this.inputs.some((input) => {
-            return Keyb.isJustDown(input)
+            return Keyb.isJustDown(input, delta)
         })
     }
 }
