@@ -8,6 +8,7 @@ export default class Entity extends React.Component {
     }
     get style() {
         return {
+            zIndex: 999,
             position: "absolute",
             width: this.props.entity.width + "px",
             height: this.props.entity.height + "px",
@@ -15,7 +16,7 @@ export default class Entity extends React.Component {
             left: this.props.entity.position.x + "px",
             marginTop: -1 * this.props.entity.height + "px",
             marginLeft: -0.5 * this.props.entity.width + "px",
-            backgroundColor: this.props.entity.color
+            backgroundColor: this.props.entity.color,
         }
     }
 }

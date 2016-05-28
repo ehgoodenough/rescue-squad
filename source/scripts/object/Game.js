@@ -50,4 +50,8 @@ export default class Game {
             object.game = this
         }
     }
+    update(delta) {
+        this.player.update(delta)
+        return this
+    }
 }

@@ -9,10 +9,13 @@ export default class Mount extends React.Component {
         if(!!this.state) {
             return (
                 <Frame frame={this.state.frame}>
-                    <Level level={this.state.levels[0]} frame={this.state.frame}/>
-                    <Level level={this.state.levels[1]} frame={this.state.frame}/>
-                    <Level level={this.state.levels[2]} frame={this.state.frame}/>
                     <Entity entity={this.state.player}/>
+                    {this.state.levels.map((level, key) => {
+                        return (
+                            <Level level={level} key={key}
+                                frame={this.state.frame}/>
+                        )
+                    })}
                 </Frame>
             )
         } else {
