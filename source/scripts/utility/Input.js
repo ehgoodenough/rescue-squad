@@ -54,4 +54,28 @@ document.addEventListener("keyup", function(event) {
     Keyb.setUp(vkey[event.keyCode])
 })
 
-export default Keyb
+class Input {
+    constructor(inputs) {
+        if(inputs.constructor != Array) {
+            this.inputs = new Array()
+            this.inputs.push(inputs)
+        } else {
+            this.inputs = inputs
+        }
+    }
+    static isDown(input) {
+        return Keyb.isDown(input)
+    }
+    isDown() {
+        return this.inputs.some((input) => {
+            return Keyb.isDown(input)
+        })
+    }
+    isJustDown() {
+        return this.inputs.some((input) => {
+            return Keyb.isJustDown(input)
+        })
+    }
+}
+
+export default Input

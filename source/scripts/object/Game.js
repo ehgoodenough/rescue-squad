@@ -1,5 +1,6 @@
 import Level from "./Level.js"
 import Player from "./Player.js"
+import Input from "../utility/Input.js"
 
 const UNIT = 32
 const colors = [
@@ -14,7 +15,13 @@ export default class Game {
         this.add("player", new Player({
             position: {x: UNIT * 4, y: UNIT * 2},
             width: UNIT * 0.5, height: UNIT * 0.5,
-            color: "#FFF"
+            color: "#FFF",
+            inputs: {
+                "up": new Input(["W", "<up>"]),
+                "down": new Input(["S", "<down>"]),
+                "left": new Input(["A", "<left>"]),
+                "right": new Input(["D", "<right>"]),
+            }
         }))
         this.add("levels", [
             new Level(0, colors[1], [
