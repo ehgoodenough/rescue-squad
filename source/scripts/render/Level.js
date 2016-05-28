@@ -16,7 +16,7 @@ export default class Level extends React.Component {
             {x: this.props.frame.width, y: this.props.frame.height},
             {x: 0, y: this.props.frame.height}
         ])
-        
+
         return points.map((point) => {
             return point.x + "," + point.y
         }).join(" ")

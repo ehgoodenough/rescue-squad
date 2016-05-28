@@ -1,6 +1,7 @@
 const FRICTION = 0.5
 const VERTICALITY = 10
 const GRAVITY = 0.9
+const TOO_MUCH_GRAVITY = 10
 
 export default class Player {
     constructor(player) {
@@ -19,6 +20,15 @@ export default class Player {
         this.stack = 99
     }
     update(delta) {
+        if(this.mode == "on ledge"
+        || this.mode == "on ground") {
+            if(this.position.x - this.game.levels[this.level].speed > 0) {
+                this.position.x -= this.game.levels[this.level].speed
+            } else if(this.game.levels[this.level].y(this.position.x) - this.position.y < -VERTICALITY) {
+                console.log("Game Over!")
+            }
+        }
+
         // vertical acceleration from inputs
         if(this.mode == "on ground" && this.inputs["up"].isDown()
         || this.mode == "on ledge" && this.inputs["up"].isJustDown(delta)
@@ -47,6 +57,12 @@ export default class Player {
 
         // query level
         var level = this.game.levels[this.level]
+        // if(this.mode == "on ledge"
+        // || this.mode == "on ground") {
+        //     if(this.position.x - level.speed > 0) {
+        //         this.position.x -= level.speed
+        //     }
+        // }
 
         // collision with camera
         if(this.position.x + this.velocity.x < 0
@@ -79,8 +95,10 @@ export default class Player {
         if(this.velocity.y > 0
         && this.position.y + this.velocity.y - (this.mode == "on ledge" ? this.height : 0) > level.y(this.position.x + this.velocity.x)) {
             this.position.y = level.y(this.position.x + this.velocity.x) + (this.mode == "on ledge" ? this.height : 0)
+            if(this.velocity.y > TOO_MUCH_GRAVITY) {
+                console.log("Game Over!")
+            }
             this.velocity.y = 0
-
             if(this.mode != "on ledge") {
                 this.mode = "on ground"
             }

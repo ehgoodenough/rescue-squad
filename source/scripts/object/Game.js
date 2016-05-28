@@ -35,14 +35,17 @@ export default class Game {
             new Level(1, colors[2], [
                 0, -1, 0, 0, +1, 0, +1,
                 0, 0, 0, 0, -1, 0, 0, 0,
-                +1, 0, 0, "-", 0, 0,
+                +1, 0, 0, "-", 0, 0, +1,
             ]),
             new Level(2, colors[3], [
-                0, 0, "+", 0, 0, 0, -1,
-                0, 0, 0, -1, 0, 0, +1, 0,
-                +1, 0, 0, -1, -1, 0, 0
+                0, -1, 0, 0, "+", 0, 0,
+                -1, 0, 0, +1, 0, 0, -1,
+                0, 0, -1, 0, 0, +1
             ]),
         ]
+        for(var index in this.levels) {
+            this.levels[index].game = this
+        }
 
         this.frame = {
             width: 640,
@@ -68,11 +71,19 @@ export default class Game {
                 this[label][object[index].key] = object[index]
             }
         } else {
+            console.log("!")
             object.game = this
             object.key = ShortID.generate()
 
             this[label] = object
         }
+    }
+    addTo(label, object) {
+        object.key = ShortID.generate()
+        object.game = this
+
+        this[label] = this[label] || new Object()
+        this[label][object.key] = object
     }
     remove(label, object) {
         delete this[label][object.key]

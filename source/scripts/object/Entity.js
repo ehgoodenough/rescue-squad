@@ -11,6 +11,7 @@ export class Beagle {
         this.height = UNIT * 0.5
 
         this.color = "#BCA254"
+        this.color = "#FFF"
 
         this.velocity = {}
         this.direction = -1
@@ -25,6 +26,7 @@ export class Beagle {
 
         // collision with level
         var level = this.game.levels[this.level]
+        this.position.x -= level.speed
         if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY) {
             this.direction *= -1
             this.velocity.x = 0
