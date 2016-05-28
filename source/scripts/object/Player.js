@@ -15,6 +15,8 @@ export default class Player {
 
         this.velocity = {x: 0, y: 0}
         this.acceleration = {x: 5, y: 8}
+
+        this.stack = 99
     }
     update(delta) {
         // vertical acceleration from inputs
@@ -69,7 +71,8 @@ export default class Player {
             }
         }
         if(this.mode == "jumping" && this.velocity.y > 0 && this.level > 0
-        && this.position.y - this.height < this.game.levels[this.level - 1].y(this.position.x + this.velocity.x)) {
+        && this.position.y - this.height < this.game.levels[this.level - 1].y(this.position.x + this.velocity.x)
+        && level.y(this.position.x + this.velocity.x) - this.game.levels[this.level - 1].y(this.position.x + this.velocity.x) > this.height) {
             this.mode = "on ledge"
             this.level -= 1
         }
@@ -81,12 +84,6 @@ export default class Player {
             if(this.mode != "on ledge") {
                 this.mode = "on ground"
             }
-        }
-        if(this.mode == "on ledge"
-        && this.level + 1 < this.game.levels.length
-        && this.position.y + this.velocity.y > this.game.levels[this.level + 1].y(this.position.x + this.velocity.x)) {
-            this.mode = "on ground"
-            this.level += 1
         }
 
         // translation from velocity

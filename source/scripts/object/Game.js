@@ -1,6 +1,9 @@
 import Level from "./Level.js"
 import Player from "./Player.js"
+import {Beagle} from "./Entity.js"
+
 import Input from "../utility/Input.js"
+import ShortID from "shortid"
 
 const UNIT = 32
 const colors = [
@@ -23,7 +26,7 @@ export default class Game {
                 "right": new Input(["D", "<right>"]),
             }
         }))
-        this.add("levels", [
+        this.levels = [
             new Level(0, colors[1], [
                 0, +1, 0, 0, 0, -1, -1, 0,
                 0, "+", 0, 0, 0, 0, -1, 0,
@@ -39,25 +42,53 @@ export default class Game {
                 0, 0, 0, -1, 0, 0, +1, 0,
                 +1, 0, 0, -1, -1, 0, 0
             ]),
-        ])
+        ]
 
         this.frame = {
             width: 640,
             height: 360,
             color: colors[0]
         }
+        this.add("entities", [
+            new Beagle({
+                position: {
+                    x: 400,
+                    y: 140,
+                }
+            })
+        ])
     }
     add(label, object) {
-        this[label] = object
         if(object instanceof Array) {
+            this[label] = new Object()
             for(var index in object) {
                 object[index].game = this
+                object[index].key = ShortID.generate()
+
+                this[label][object[index].key] = object[index]
             }
         } else {
             object.game = this
+            object.key = ShortID.generate()
+
+            this[label] = object
         }
     }
+    remove(label, object) {
+        delete this[label][object.key]
+    }
     update(delta) {
+        this.levels.forEach((level) => {
+            if(level.update instanceof Function) {
+                level.update(delta)
+            }
+        })
+        Object.keys(this.entities).forEach((key) => {
+            var entity = this.entities[key]
+            if(entity.update instanceof Function) {
+                entity.update(delta)
+            }
+        })
         this.player.update(delta)
         return this
     }

@@ -8,8 +8,8 @@ export default class Entity extends React.Component {
     }
     get style() {
         return {
-            zIndex: 999,
             position: "absolute",
+            zIndex: this.props.entity.stack || 1,
             width: this.props.entity.width + "px",
             height: this.props.entity.height + "px",
             top: this.props.entity.position.y + "px",
