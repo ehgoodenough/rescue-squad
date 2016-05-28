@@ -10,7 +10,6 @@ export class Beagle {
         this.width = UNIT * 0.5
         this.height = UNIT * 0.5
 
-        this.color = "#BCA254"
         this.color = "#FFF"
 
         this.velocity = {}
@@ -42,7 +41,7 @@ export class Beagle {
         this.position.y = level.y(this.position.x)
 
         // collision with player
-        if(getDistance(this.position, this.game.player.position) < this.width / 2) {
+        if(getDistance(this.position, this.game.player.position) < this.width * 0.75) {
             this.game.remove("entities", this)
         }
 

@@ -16,7 +16,7 @@ const colors = [
 export default class Game {
     constructor() {
         this.add("player", new Player({
-            position: {x: UNIT * 4, y: UNIT * 2},
+            position: {x: UNIT * 3, y: UNIT * 1},
             width: UNIT * 0.5, height: UNIT * 0.5,
             color: "#FFF",
             inputs: {
@@ -27,21 +27,9 @@ export default class Game {
             }
         }))
         this.levels = [
-            new Level(0, colors[1], [
-                0, +1, 0, 0, 0, -1, -1, 0,
-                0, "+", 0, 0, 0, 0, -1, 0,
-                -1, 0, 0, +1, 0, 0, 0,
-            ]),
-            new Level(1, colors[2], [
-                0, -1, 0, 0, +1, 0, +1,
-                0, 0, 0, 0, -1, 0, 0, 0,
-                +1, 0, 0, "-", 0, 0, +1,
-            ]),
-            new Level(2, colors[3], [
-                0, -1, 0, 0, "+", 0, 0,
-                -1, 0, 0, +1, 0, 0, -1,
-                0, 0, -1, 0, 0, +1
-            ]),
+            new Level(0, colors[1]),
+            new Level(1, colors[2]),
+            new Level(2, colors[3]),
         ]
         for(var index in this.levels) {
             this.levels[index].game = this
@@ -52,14 +40,7 @@ export default class Game {
             height: 360,
             color: colors[0]
         }
-        this.add("entities", [
-            new Beagle({
-                position: {
-                    x: 400,
-                    y: 140,
-                }
-            })
-        ])
+        this.entities = new Object()
     }
     add(label, object) {
         if(object instanceof Array) {
@@ -71,7 +52,6 @@ export default class Game {
                 this[label][object[index].key] = object[index]
             }
         } else {
-            console.log("!")
             object.game = this
             object.key = ShortID.generate()
 
@@ -89,6 +69,14 @@ export default class Game {
         delete this[label][object.key]
     }
     update(delta) {
+        if(Input.isJustDown("<space>", delta)) {
+            this.levels = [
+                new Level(0, colors[1]),
+                new Level(1, colors[2]),
+                new Level(2, colors[3]),
+            ]
+        }
+
         this.levels.forEach((level) => {
             if(level.update instanceof Function) {
                 level.update(delta)
