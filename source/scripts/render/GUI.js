@@ -24,7 +24,7 @@ export default class GUI extends React.Component {
                         </span>
                     </div>
                     <div className="score">
-                        {pad(this.props.game.stage.score)}
+                        {pad(this.props.game.score)}
                     </div>
                     <div className="stage">
                         Level {this.props.game.stage.stage}:
@@ -35,6 +35,14 @@ export default class GUI extends React.Component {
                     <span className="amount">
                         {this.props.game.stage.dogs}
                     </span>
+                </div>
+                <div className="message">
+                    {this.props.game.stage.mode == "complete" ? (
+                        <span>Level Complete!</span>
+                    ) : null}
+                    {this.props.game.stage.mode == "game over" ? (
+                        <span>You died!</span>
+                    ) : null}
                 </div>
             </div>
         )

@@ -14,7 +14,7 @@ const colors = [
 ]
 
 class Stage {
-    constructor(game) {
+    constructor(game, stage) {
         this.game = game
 
 
@@ -37,14 +37,12 @@ class Stage {
         this.add("levels", new Level(2, colors[3]), 2)
 
         this.entityCountdown = 0
+        this.timerToNextStage = 3
 
         this.entities = new Object()
 
-        this.score = 0
-        this.lives = 3
-        this.dogs = 2
-        this.stage = 1
-
+        this.dogs = stage.dogs
+        this.stage = stage.stage || 1
 
 
 
@@ -74,44 +72,61 @@ class Stage {
         this[label].length -= 1
     }
     update(delta) {
-        Object.keys(this.levels).forEach((key) => {
-            var level = this.levels[key]
-            if(level.update instanceof Function) {
-                level.update(delta)
+        if(this.mode == "complete"
+        || this.mode == "game over") {
+            this.timerToNextStage -= delta / 1000
+            if(this.timerToNextStage <= 0
+            || Input.isJustDown("<space>", delta)) {
+                this.game.stage = new Stage(this.game, {
+                    stage: this.stage + 1,
+                    dogs: 5,
+                })
             }
-        })
-        Object.keys(this.entities).forEach((key) => {
-            var entity = this.entities[key]
-            if(entity.update instanceof Function) {
-                entity.update(delta)
-            }
-        })
-        this.player.update(delta)
+        } else {
+            Object.keys(this.levels).forEach((key) => {
+                var level = this.levels[key]
+                if(level.update instanceof Function) {
+                    level.update(delta)
+                }
+            })
+            Object.keys(this.entities).forEach((key) => {
+                var entity = this.entities[key]
+                if(entity.update instanceof Function) {
+                    entity.update(delta)
+                }
+            })
+            this.player.update(delta)
 
-        this.entityCountdown -= delta / 1000
-        if(this.entityCountdown <= 0) {
-            this.entityCountdown = 5
-            var level = this.levels[Math.floor(Math.random() * this.levels.length)]
-            this.add("entities", new Beagle({
-                position: {
-                    x: level.points[level.points.length - 1].x,
-                    y: level.points[level.points.length - 1].y,
-                },
-                level: level.level,
-            }))
+            this.entityCountdown -= delta / 1000
+            if(this.entityCountdown <= 0) {
+                this.entityCountdown = 5
+                var level = this.levels[Math.floor(Math.random() * this.levels.length)]
+                this.add("entities", new Beagle({
+                    position: {
+                        x: level.points[level.points.length - 1].x,
+                        y: level.points[level.points.length - 1].y,
+                    },
+                    level: level.level,
+                }))
+            }
         }
     }
 }
 
 export default class Game {
     constructor() {
-        this.stage = new Stage(this)
+        this.stage = new Stage(this, {
+            dogs: 3
+        })
 
         this.frame = {
             width: 640,
             height: 360,
             color: colors[0]
         }
+
+        this.score = 0
+        this.lives = 3
     }
     update(delta) {
         this.stage.update(delta)

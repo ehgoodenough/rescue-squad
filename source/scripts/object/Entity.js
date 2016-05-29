@@ -44,18 +44,17 @@ export class Beagle {
         if(getDistance(this.position, this.game.stage.player.position) < this.width * 0.75) {
             this.game.stage.remove("entities", this)
             this.game.stage.dogs -= 1
-            this.game.stage.score += 100
+            this.game.score += 100
             if(this.game.stage.dogs <= 0) {
                 this.game.stage.dogs = 0
                 this.game.stage.mode = "complete"
-                console.log("Level Complete")
             }
         }
 
         // collision with camera
         if(this.position.x <= -1 * this.width) {
             this.game.stage.remove("entities", this)
-            console.log("Game Over!")
+            this.game.stage.mode = "game over"
         }
     }
 }

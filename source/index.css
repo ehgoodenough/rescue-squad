@@ -25,6 +25,9 @@ svg {
     font-size: 12px;
     font-family: rescue;
 
+    z-index: 999;
+    position: relative;
+
     .bar {
         top: 0px;
         left: 0px;
@@ -89,5 +92,17 @@ svg {
             vertical-align: text-bottom;
             background-color: white;
         }
+    }
+
+    .message {
+        top: 100px;
+        left: 0px;
+        right: 0px;
+        bottom: 100px;
+        position: absolute;
+
+        color: #FFF;
+        font-size: 3em;
+        text-align: center;
     }
 }
