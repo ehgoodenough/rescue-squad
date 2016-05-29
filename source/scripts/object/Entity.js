@@ -23,7 +23,7 @@ export class Beagle {
         }
 
         // collision with level
-        var level = this.game.levels[this.level]
+        var level = this.game.stage.levels[this.level]
         this.position.x -= level.speed
         if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY
         || level.y(this.position.x + this.velocity.x) - this.position.y > +VERTICALITY) {
@@ -41,20 +41,20 @@ export class Beagle {
         this.position.y = level.y(this.position.x)
 
         // collision with player
-        if(getDistance(this.position, this.game.player.position) < this.width * 0.75) {
-            this.game.remove("entities", this)
-            this.game.dogs -= 1
-            this.game.score += 100
-            if(this.game.dogs <= 0) {
-                this.game.dogs = 0
-                this.game.mode = "complete"
+        if(getDistance(this.position, this.game.stage.player.position) < this.width * 0.75) {
+            this.game.stage.remove("entities", this)
+            this.game.stage.dogs -= 1
+            this.game.stage.score += 100
+            if(this.game.stage.dogs <= 0) {
+                this.game.stage.dogs = 0
+                this.game.stage.mode = "complete"
                 console.log("Level Complete")
             }
         }
 
         // collision with camera
         if(this.position.x <= -1 * this.width) {
-            this.game.remove("entities", this)
+            this.game.stage.remove("entities", this)
             console.log("Game Over!")
         }
     }

@@ -24,16 +24,16 @@ export default class GUI extends React.Component {
                         </span>
                     </div>
                     <div className="score">
-                        {pad(this.props.game.score)}
+                        {pad(this.props.game.stage.score)}
                     </div>
                     <div className="stage">
-                        Level {this.props.game.stage}:
+                        Level {this.props.game.stage.stage}:
                     </div>
                 </div>
                 <div className="dogs">
                     <span className="icon"/>
                     <span className="amount">
-                        {this.props.game.dogs}
+                        {this.props.game.stage.dogs}
                     </span>
                 </div>
             </div>

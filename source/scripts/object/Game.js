@@ -13,8 +13,14 @@ const colors = [
     "#222222",
 ]
 
-export default class Game {
-    constructor() {
+class Stage {
+    constructor(game) {
+        this.game = game
+
+
+
+
+
         this.add("player", new Player({
             position: {x: UNIT * 3, y: UNIT * 1},
             width: UNIT * 0.5, height: UNIT * 0.5,
@@ -25,58 +31,51 @@ export default class Game {
                 "left": new Input(["A", "<left>"]),
                 "right": new Input(["D", "<right>"]),
             }
-        }))
-        this.levels = [
-            new Level(0, colors[1]),
-            new Level(1, colors[2]),
-            new Level(2, colors[3]),
-        ]
-        for(var index in this.levels) {
-            this.levels[index].game = this
-        }
+        }), false)
+        this.add("levels", new Level(0, colors[1]), 0)
+        this.add("levels", new Level(1, colors[2]), 1)
+        this.add("levels", new Level(2, colors[3]), 2)
 
         this.entityCountdown = 0
 
-        this.frame = {
-            width: 640,
-            height: 360,
-            color: colors[0]
-        }
         this.entities = new Object()
 
-        this.score = 100
+        this.score = 0
         this.lives = 3
-        this.dogs = 10
+        this.dogs = 2
         this.stage = 1
-    }
-    add(label, object) {
-        if(object instanceof Array) {
-            this[label] = new Object()
-            for(var index in object) {
-                object[index].game = this
-                object[index].key = ShortID.generate()
 
-                this[label][object[index].key] = object[index]
-            }
+
+
+
+
+
+    }
+    add(label, object, key) {
+        object.stage = this
+        object.game = this.game
+
+        if(key != undefined) {
+            object.key = key
         } else {
-            object.game = this
             object.key = ShortID.generate()
-
-            this[label] = object
         }
-    }
-    addTo(label, object) {
-        object.key = ShortID.generate()
-        object.game = this
 
-        this[label] = this[label] || new Object()
-        this[label][object.key] = object
+        if(key === false) {
+            this[label] = object
+        } else {
+            this[label] = this[label] || new Object()
+            this[label][object.key] = object
+            this[label].length = (this[label].length || 0) + 1
+        }
     }
     remove(label, object) {
         delete this[label][object.key]
+        this[label].length -= 1
     }
     update(delta) {
-        this.levels.forEach((level) => {
+        Object.keys(this.levels).forEach((key) => {
+            var level = this.levels[key]
             if(level.update instanceof Function) {
                 level.update(delta)
             }
@@ -93,7 +92,7 @@ export default class Game {
         if(this.entityCountdown <= 0) {
             this.entityCountdown = 5
             var level = this.levels[Math.floor(Math.random() * this.levels.length)]
-            this.addTo("entities", new Beagle({
+            this.add("entities", new Beagle({
                 position: {
                     x: level.points[level.points.length - 1].x,
                     y: level.points[level.points.length - 1].y,
@@ -101,5 +100,20 @@ export default class Game {
                 level: level.level,
             }))
         }
+    }
+}
+
+export default class Game {
+    constructor() {
+        this.stage = new Stage(this)
+
+        this.frame = {
+            width: 640,
+            height: 360,
+            color: colors[0]
+        }
+    }
+    update(delta) {
+        this.stage.update(delta)
     }
 }

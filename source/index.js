@@ -41,8 +41,20 @@ var render = ReactDOM.render(<Mount/>, document.getElementById("mount"))
 import Loop from "./scripts/utility/Loop.js"
 
 var loop = new Loop(function(delta) {
-    game.update(delta)
+    if(game.mode != "complete") {
+        game.update(delta)
+    } else {
+        // show score
+    }
     render.setState({
         "game": game
     })
 })
+
+// pause the game when the game is won
+// maybe eventually put everything into
+// a "stage" object, with three levels
+// all entities and player. The stage
+// can be easily re-instantiated for
+// restarting the stage (game over)
+// or moving to the next stage (win).

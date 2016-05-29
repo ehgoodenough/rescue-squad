@@ -20,9 +20,9 @@ export default class Player {
         this.stack = 99
     }
     update(delta) {
-        if(this.position.x - this.game.levels[this.level].speed > 0) {
-            this.position.x -= this.game.levels[this.level].speed
-        } else if(this.game.levels[this.level].y(this.position.x) - this.position.y < -VERTICALITY) {
+        if(this.position.x - this.game.stage.levels[this.level].speed > 0) {
+            this.position.x -= this.game.stage.levels[this.level].speed
+        } else if(this.game.stage.levels[this.level].y(this.position.x) - this.position.y < -VERTICALITY) {
             console.log("Game Over!")
         }
 
@@ -35,7 +35,7 @@ export default class Player {
         }
         if(this.mode == "on ledge" && this.inputs["down"].isJustDown(delta)
         || this.mode == "on ground" && this.inputs["down"].isJustDown(delta)) {
-            if(this.level < this.game.levels.length - 1) {
+            if(this.level < this.game.stage.levels.length - 1) {
                 this.mode = "dropping"
                 this.level += 1
             }
@@ -53,13 +53,7 @@ export default class Player {
         this.velocity.y += GRAVITY
 
         // query level
-        var level = this.game.levels[this.level]
-        // if(this.mode == "on ledge"
-        // || this.mode == "on ground") {
-        //     if(this.position.x - level.speed > 0) {
-        //         this.position.x -= level.speed
-        //     }
-        // }
+        var level = this.game.stage.levels[this.level]
 
         // collision with camera
         if(this.position.x + this.velocity.x < 0
@@ -79,13 +73,13 @@ export default class Player {
 
         // vertical collision with level
         if(this.mode == "jumping" || this.mode == "falling" || this.mode == "dropping") {
-            if(this.level > 0 && this.position.y < this.game.levels[this.level - 1].y(this.position.x + this.velocity.x)) {
+            if(this.level > 0 && this.position.y < this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x)) {
                 this.level -= 1
             }
         }
         if(this.mode == "jumping" && this.velocity.y > 0 && this.level > 0
-        && this.position.y - this.height < this.game.levels[this.level - 1].y(this.position.x + this.velocity.x)
-        && level.y(this.position.x + this.velocity.x) - this.game.levels[this.level - 1].y(this.position.x + this.velocity.x) > this.height) {
+        && this.position.y - this.height < this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x)
+        && level.y(this.position.x + this.velocity.x) - this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x) > this.height) {
             this.mode = "on ledge"
             this.level -= 1
         }
