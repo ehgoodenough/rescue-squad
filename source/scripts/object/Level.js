@@ -1,6 +1,7 @@
 import {UNIT} from "../utility/Constants.js"
 const OFFSET = 8 // gap between each level
 const BUFFER = 360 - (((2 + 2 + 2) * UNIT) + OFFSET + OFFSET)
+const GUI_SIZE = 28
 
 import {Beagle} from "./Entity.js"
 
@@ -9,15 +10,10 @@ export default class Level {
         this.color = color
 
         this.level = level
-        this.speed = 0 && 0.5
+
+        this.speed = ((this.level * 2) + 3) / 10
 
         this.points = new Array()
-
-        // pomodoro todo:
-        // use that first point
-        // to generate other points
-        // foreeeeever
-
         while(this.points.length < 21) {
             this.addAnotherPoint()
         }
@@ -25,6 +21,7 @@ export default class Level {
     addAnotherPoint() {
         if(this.points.length == 0) {
             var y = this.level * 2 * UNIT
+            y += GUI_SIZE
             y += this.level * OFFSET
             y += BUFFER / 2
             y += UNIT
@@ -35,14 +32,49 @@ export default class Level {
             })
         } else {
             var prevpoint = this.points[this.points.length - 1]
-            var vector = this.getNextVector(prevpoint)
-            var lvl = prevpoint.lvl
-            var y = prevpoint.y
-            var x = prevpoint.x
 
-            if(this.level == 0) {
-                // console.log(vector)
+            var vectors = new Array()
+            if(prevpoint.vector[0] == "-") {
+                if(prevpoint.lvl < 2) {
+                    vectors.push("\\")
+                }
+                if(prevpoint.lvl > 0) {
+                    vectors.push("/")
+                }
+                if(prevpoint.lvl != 1
+                && Math.random() < 0.25) {
+                    vectors.push("|")
+                }
             }
+            if(prevpoint.vector == "/"
+            && Math.random() < 0.5) {
+                vectors.push("\\")
+                if(prevpoint.lvl > 0) {
+                    vectors.push("/")
+                }
+            } if(prevpoint.vector == "\\"
+            && Math.random() < 0.5) {
+                if(prevpoint.lvl < 2) {
+                    vectors.push("\\")
+                }
+            }
+            if(prevpoint.vector[0] != "-"
+            || vectors.length == 0) {
+                vectors.push("-")
+                vectors.push("--")
+                if(Math.random() < 0.5) {
+                    vectors.push("---")
+                }
+                if(Math.random() < 0.5) {
+                    vectors.push("----")
+                }
+            }
+
+            var vector = vectors[Math.floor(Math.random() * vectors.length)]
+
+            var lvl = prevpoint.lvl
+            var x = prevpoint.x
+            var y = prevpoint.y
 
             if(vector[0] == "-") {
                 x += UNIT * vector.length
@@ -76,35 +108,7 @@ export default class Level {
             })
         }
     }
-    getNextVector(prevpoint) {
-        var vectors = new Array()
-        if(prevpoint.vector[0] == "-") {
-            if(prevpoint.lvl < 2) {
-                vectors.push("\\")
-            }
-            if(prevpoint.lvl > 0) {
-                vectors.push("/")
-            }
-            if(prevpoint.lvl != 1
-            && Math.random() < 0.25) {
-                vectors.push("|")
-            }
-        }
-        if(prevpoint.vector[0] != "-"
-        || vectors.length == 0) {
-            vectors.push("-")
-            vectors.push("--")
-            if(Math.random() < 0.25) {
-                vectors.push("---")
-            }
-            if(Math.random() < 0.25) {
-                vectors.push("----")
-            }
-        }
-        return vectors[Math.floor(Math.random() * vectors.length)]
-    }
     update(delta) {
-        return
         for(var index in this.points) {
             this.points[index].x -= this.speed
         }
@@ -115,26 +119,9 @@ export default class Level {
 
         var endpoint = this.points[this.points.length - 1]
         if(endpoint.x < this.game.frame.width) {
-            var y = 0
-            if(Math.random() < 0.5) {
-                this.flip = (this.flip * -1) || +1
-                y = UNIT * this.flip
-            }
-            this.points.push({
-                x: endpoint.x + UNIT,
-                y: endpoint.y + y
-            })
-            // this.game.addTo("entities", new Beagle({
-            //     position: {
-            //         x: endpoint.x + UNIT,
-            //         y: endpoint.y + y
-            //     }
-            // }))
+            this.addAnotherPoint()
         }
     }
-
-
-
     y(x) {
         for(var i = 1; i < this.points.length; i++) {
             var a = this.points[i - 1]

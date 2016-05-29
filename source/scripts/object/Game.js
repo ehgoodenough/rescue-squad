@@ -35,12 +35,19 @@ export default class Game {
             this.levels[index].game = this
         }
 
+        this.entityCountdown = 0
+
         this.frame = {
             width: 640,
             height: 360,
             color: colors[0]
         }
         this.entities = new Object()
+
+        this.score = 100
+        this.lives = 3
+        this.dogs = 10
+        this.stage = 1
     }
     add(label, object) {
         if(object instanceof Array) {
@@ -69,14 +76,6 @@ export default class Game {
         delete this[label][object.key]
     }
     update(delta) {
-        if(Input.isJustDown("<space>", delta)) {
-            this.levels = [
-                new Level(0, colors[1]),
-                new Level(1, colors[2]),
-                new Level(2, colors[3]),
-            ]
-        }
-
         this.levels.forEach((level) => {
             if(level.update instanceof Function) {
                 level.update(delta)
@@ -89,6 +88,18 @@ export default class Game {
             }
         })
         this.player.update(delta)
-        return this
+
+        this.entityCountdown -= delta / 1000
+        if(this.entityCountdown <= 0) {
+            this.entityCountdown = 5
+            var level = this.levels[Math.floor(Math.random() * this.levels.length)]
+            this.addTo("entities", new Beagle({
+                position: {
+                    x: level.points[level.points.length - 1].x,
+                    y: level.points[level.points.length - 1].y,
+                },
+                level: level.level,
+            }))
+        }
     }
 }

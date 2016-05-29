@@ -20,13 +20,10 @@ export default class Player {
         this.stack = 99
     }
     update(delta) {
-        if(this.mode == "on ledge"
-        || this.mode == "on ground") {
-            if(this.position.x - this.game.levels[this.level].speed > 0) {
-                this.position.x -= this.game.levels[this.level].speed
-            } else if(this.game.levels[this.level].y(this.position.x) - this.position.y < -VERTICALITY) {
-                console.log("Game Over!")
-            }
+        if(this.position.x - this.game.levels[this.level].speed > 0) {
+            this.position.x -= this.game.levels[this.level].speed
+        } else if(this.game.levels[this.level].y(this.position.x) - this.position.y < -VERTICALITY) {
+            console.log("Game Over!")
         }
 
         // vertical acceleration from inputs
@@ -122,3 +119,5 @@ export default class Player {
 // - deceleration doesn't use friction
 // - collision resolution doesn't push against collision
 // - velocity is not preserved during acceleration
+// - gravity is always applying, even when not necessary
+// - vertical collision is ugly

@@ -42,5 +42,7 @@ import Loop from "./scripts/utility/Loop.js"
 
 var loop = new Loop(function(delta) {
     game.update(delta)
-    render.setState(game)
+    render.setState({
+        "game": game
+    })
 })
