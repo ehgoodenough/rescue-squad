@@ -1,6 +1,6 @@
 import Level from "./Level.js"
 import Player from "./Player.js"
-import {Beagle} from "./Entity.js"
+import {Beagle, Equipment} from "./Entity.js"
 
 import {UNIT} from "../utility/Constants.js"
 import Input from "../utility/Input.js"
@@ -93,14 +93,33 @@ export default class Stage {
             if(this.entityCountdown <= 0) {
                 this.entityCountdown = 5
                 var level = this.levels[Math.floor(Math.random() * this.levels.length)]
-                this.add("entities", new Beagle({
-                    position: {
-                        x: level.points[level.points.length - 1].x,
-                        y: level.points[level.points.length - 1].y,
-                    },
-                    level: level.level,
-                }))
+                if(Math.random() < 0.5) {
+                    this.add("entities", new Beagle({
+                        position: {
+                            x: level.points[level.points.length - 1].x,
+                            y: level.points[level.points.length - 1].y,
+                        },
+                        level: level.level,
+                    }))
+                } else {
+                    var midpoint = getMidpoint(level.points[level.points.length - 2], level.points[level.points.length - 1])
+                    this.add("entities", new Equipment({
+                        position: {
+                            x: midpoint.x,
+                            y: midpoint.y,
+                        },
+                        level: level.level,
+                        type: Math.random() < 0.5 ? "parachute" : "ropes"
+                    }))
+                }
             }
         }
+    }
+}
+
+function getMidpoint(a, b) {
+    return {
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2
     }
 }

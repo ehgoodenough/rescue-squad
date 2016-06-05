@@ -8,19 +8,19 @@ export default class GUI extends React.Component {
                     <div className="parachute equipment">
                         <span className="icon"/>
                         <span className="amount">
-                            3
+                            {this.props.game.stage.player.equipment.parachutes}
                         </span>
                     </div>
                     <div className="rope equipment">
                         <span className="icon"/>
                         <span className="amount">
-                            2
+                            {this.props.game.stage.player.equipment.ropes}
                         </span>
                     </div>
                     <div className="medkit equipment">
                         <span className="icon"/>
                         <span className="amount">
-                            1
+                            {this.props.game.stage.player.equipment.medkits}
                         </span>
                     </div>
                     <div className="score">

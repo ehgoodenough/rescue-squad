@@ -12,10 +12,16 @@ export default class Player {
         this.color = player.color
 
         this.level = 0
-        this.mode = "falling"
+        this.mode = "parachuting"
 
         this.velocity = {x: 0, y: 0}
         this.acceleration = {x: 5, y: 8}
+
+        this.equipment = {
+            "parachutes": 2,
+            "ropes": 2,
+            "medkits": 1,
+        }
 
         this.stack = 99
     }
@@ -27,6 +33,28 @@ export default class Player {
         }
 
         // vertical acceleration from inputs
+        if(this.mode == "dropping"
+        || this.mode == "falling"
+        || this.mode == "jumping") {
+            if(this.equipment.parachutes > 0) {
+                if(this.inputs["down"].isJustDown(delta)) {
+                    this.equipment.parachutes -= 1
+                    this.mode = "parachuting"
+                }
+            }
+        }
+        if(this.mode == "jumping"
+        || this.mode == "falling"
+        || this.mode == "dropping") {
+            if(this.equipment.ropes > 0) {
+                if(this.level > 0) {
+                    if(this.inputs["up"].isJustDown(delta)) {
+                        this.equipment.ropes -= 1
+                        this.mode = "hiking"
+                    }
+                }
+            }
+        }
         if(this.mode == "on ground" && this.inputs["up"].isDown()
         || this.mode == "on ledge" && this.inputs["up"].isJustDown(delta)
         || this.mode == "falling" && this.velocity.y < 5 && this.inputs["up"].isJustDown(delta)) {
@@ -42,15 +70,26 @@ export default class Player {
         }
 
         // horizontal acceleration from inputs
-        if(this.inputs["left"].isDown()) {
-            this.velocity.x = -1 * this.acceleration.x
-        }
-        if(this.inputs["right"].isDown()) {
-            this.velocity.x = +1 * this.acceleration.x
+        if(this.mode != "hiking") {
+            if(this.inputs["left"].isDown()) {
+                this.velocity.x = -1 * this.acceleration.x
+            }
+            if(this.inputs["right"].isDown()) {
+                this.velocity.x = +1 * this.acceleration.x
+            }
         }
 
         // vertical acceleration from gravity
-        this.velocity.y += GRAVITY
+        if(this.mode == "falling"
+        || this.mode == "jumping"
+        || this.mode == "dropping"
+        || this.mode == "on ledge") {
+            this.velocity.y += GRAVITY
+        } else if(this.mode == "parachuting") {
+            this.velocity.y = GRAVITY
+        } else if(this.mode == "hiking") {
+            this.velocity.y = -GRAVITY
+        }
 
         // query level
         var level = this.game.stage.levels[this.level]
@@ -72,13 +111,19 @@ export default class Player {
         }
 
         // vertical collision with level
-        if(this.mode == "jumping" || this.mode == "falling" || this.mode == "dropping") {
+        if(this.mode == "jumping" || this.mode == "falling" || this.mode == "dropping" || this.mode == "parachuting") {
             if(this.level > 0 && this.position.y < this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x)) {
                 this.level -= 1
             }
         }
-        if(this.mode == "jumping" && this.velocity.y > 0 && this.level > 0
-        && this.position.y - this.height < this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x)
+        // if(this.mode == "hiking") {
+        //     if(this.level > 0 && this.position.y < this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x)) {
+        //         this.level -= 1
+        //         this.mode = "on ledge"
+        //     }
+        // }
+        if(((this.mode == "jumping" && this.velocity.y > 0) || this.mode == "hiking")
+        && this.level > 0 && this.position.y - this.height < this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x)
         && level.y(this.position.x + this.velocity.x) - this.game.stage.levels[this.level - 1].y(this.position.x + this.velocity.x) > this.height) {
             this.mode = "on ledge"
             this.level -= 1

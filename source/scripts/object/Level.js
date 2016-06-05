@@ -117,7 +117,7 @@ export default class Level {
             this.points.shift()
         }
 
-        var endpoint = this.points[this.points.length - 1]
+        var endpoint = this.points[this.points.length - 2]
         if(endpoint.x < this.game.frame.width) {
             this.addAnotherPoint()
         }

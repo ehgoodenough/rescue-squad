@@ -58,3 +58,36 @@ export class Beagle {
         }
     }
 }
+
+export class Equipment {
+    constructor(equipment) {
+        this.position = equipment.position
+        this.level = equipment.level
+
+        this.width = UNIT * 0.3
+        this.height = UNIT * 0.3
+
+        this.type = equipment.type
+        this.color = equipment.type == "parachute" ? "orange" : "gray"
+    }
+    update(delta) {
+        var level = this.game.stage.levels[this.level]
+        this.position.x -= level.speed
+        this.position.y = level.y(this.position.x)
+
+        // collision with player
+        if(getDistance(this.position, this.game.stage.player.position) < this.width * 0.75) {
+            this.game.stage.remove("entities", this)
+            if(this.type == "parachute") {
+                this.game.stage.player.equipment.parachutes += 1
+            } else {
+                this.game.stage.player.equipment.ropes += 1
+            }
+        }
+
+        // collision with camera
+        if(this.position.x <= -1 * this.width) {
+            this.game.stage.remove("entities", this)
+        }
+    }
+}
