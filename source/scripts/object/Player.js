@@ -1,7 +1,7 @@
 const FRICTION = 0.5
 const VERTICALITY = 10
 const GRAVITY = 0.9
-const TOO_MUCH_GRAVITY = 10
+const MAX_GRAVITY = 8
 
 import {UNIT} from "../utility/Constants.js"
 
@@ -81,6 +81,9 @@ export default class Player {
         || this.mode == "dropping"
         || this.mode == "on ledge") {
             this.velocity.y += GRAVITY
+            if(this.velocity.y > MAX_GRAVITY) {
+                this.velocity.y = MAX_GRAVITY
+            }
         } else if(this.mode == "parachuting") {
             this.velocity.y = GRAVITY
         } else if(this.mode == "hiking") {
@@ -122,7 +125,6 @@ export default class Player {
         if(this.velocity.y > 0
         && this.position.y + this.velocity.y - (this.mode == "on ledge" ? this.height : 0) > level.y(this.position.x + this.velocity.x)) {
             this.position.y = level.y(this.position.x + this.velocity.x) + (this.mode == "on ledge" ? this.height : 0)
-            console.log(this.position.y, this.jumpdist, this.position.y - this.jumpdist)
             if(["jumping", "falling", "dropping"].indexOf(this.mode) != -1) {
                 if(this.position.y - this.jumpdist >= UNIT * 2) {
                     this.stage.mode = "game over"
