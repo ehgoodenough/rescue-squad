@@ -90,6 +90,10 @@ export default class Stage {
             })
             this.player.update(delta)
 
+            if(Input.isJustDown("<space>", delta)) {
+                throw -1
+            }
+
             this.entityCountdown -= delta / 1000
             if(this.entityCountdown <= 0) {
                 this.entityCountdown = 5
@@ -103,24 +107,19 @@ export default class Stage {
                         level: level.level,
                     }))
                 } else {
-                    var midpoint = getMidpoint(level.points[level.points.length - 2], level.points[level.points.length - 1])
+                    var a = level.points[level.points.length - 2]
+                    var b = level.points[level.points.length - 1]
                     this.add("entities", new Equipment({
                         position: {
-                            x: midpoint.x,
-                            y: midpoint.y,
+                            x: (a.x + b.x) / 2,
+                            y: (a.y + b.y) / 2
                         },
                         level: level.level,
-                        type: Math.random() < 0.5 ? "parachute" : "ropes"
+                        type: Math.random() < 0.5 ? "parachute" : "ropes",
+                        incline: a.y != b.y ? (a.y < b.y ? +45 : -45) : 0,
                     }))
                 }
             }
         }
-    }
-}
-
-function getMidpoint(a, b) {
-    return {
-        x: (a.x + b.x) / 2,
-        y: (a.y + b.y) / 2
     }
 }

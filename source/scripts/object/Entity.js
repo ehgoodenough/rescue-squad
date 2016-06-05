@@ -64,11 +64,13 @@ export class Equipment {
         this.position = equipment.position
         this.level = equipment.level
 
-        this.width = UNIT * 0.3
-        this.height = UNIT * 0.3
+        this.width = UNIT * 0.4
+        this.height = UNIT * 0.4
 
         this.type = equipment.type
         this.color = equipment.type == "parachute" ? "orange" : "gray"
+
+        this.incline = equipment.incline
     }
     update(delta) {
         var level = this.game.stage.levels[this.level]

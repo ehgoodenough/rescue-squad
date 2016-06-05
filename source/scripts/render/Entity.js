@@ -17,6 +17,8 @@ export default class Entity extends React.Component {
             marginTop: -1 * this.props.entity.height + "px",
             marginLeft: -0.5 * this.props.entity.width + "px",
             backgroundColor: this.props.entity.color,
+            transformOrigin: "50% 100% 0px",
+            transform: "rotateZ(" + (this.props.entity.incline || 0) +"deg)",
         }
     }
 }

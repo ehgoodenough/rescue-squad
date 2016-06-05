@@ -104,6 +104,7 @@ svg {
         color: #FFF;
         font-size: 3em;
         text-align: center;
+        letter-spacing: 2px;
 
         $shadow: 0 0 transparent;
         @for $i from 1 through 10 {
