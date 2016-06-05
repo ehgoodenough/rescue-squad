@@ -64,13 +64,14 @@ export default class Stage {
     }
     update(delta) {
         if(this.mode == "complete"
-        || this.mode == "game over") {
+        || this.mode == "game over"
+        || this.mode == "lost a beagle") {
             this.timerToNextStage -= delta / 1000
             if(this.timerToNextStage <= 0
             || Input.isJustDown("<space>", delta)) {
                 this.game.stage = new Stage(this.game, {
-                    stage: this.stage + 1, // only for completion, not game over
-                    dogs: 5,
+                    stage: this.stage + (this.mode == "complete" ? 1 : 0),
+                    dogs: (this.mode == "complete" ? 5 : this.dogs),
                     colors: this.colors,
                 })
             }

@@ -43,6 +43,9 @@ export default class GUI extends React.Component {
                     {this.props.game.stage.mode == "game over" ? (
                         <span>You died</span>
                     ) : null}
+                    {this.props.game.stage.mode == "lost a beagle" ? (
+                        <span>BEAGLE LOST</span>
+                    ) : null}
                 </div>
             </div>
         )

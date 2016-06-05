@@ -2,6 +2,7 @@ const FRICTION = 0.5
 const VERTICALITY = 10
 const GRAVITY = 0.9
 const MAX_GRAVITY = 8
+const MAX_FALL_DISTANCE = UNIT * 1.5
 
 import {UNIT} from "../utility/Constants.js"
 
@@ -126,7 +127,7 @@ export default class Player {
         && this.position.y + this.velocity.y - (this.mode == "on ledge" ? this.height : 0) > level.y(this.position.x + this.velocity.x)) {
             this.position.y = level.y(this.position.x + this.velocity.x) + (this.mode == "on ledge" ? this.height : 0)
             if(["jumping", "falling", "dropping"].indexOf(this.mode) != -1) {
-                if(this.position.y - this.jumpdist >= UNIT * 2) {
+                if(this.position.y - this.jumpdist >= MAX_FALL_DISTANCE) {
                     this.stage.mode = "game over"
                 }
             }

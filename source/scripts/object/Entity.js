@@ -54,7 +54,7 @@ export class Beagle {
         // collision with camera
         if(this.position.x <= -1 * this.width) {
             this.game.stage.remove("entities", this)
-            this.game.stage.mode = "game over"
+            this.game.stage.mode = "lost a beagle"
         }
     }
 }
