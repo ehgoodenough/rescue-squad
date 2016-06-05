@@ -38,10 +38,10 @@ export default class GUI extends React.Component {
                 </div>
                 <div className="message">
                     {this.props.game.stage.mode == "complete" ? (
-                        <span>Level Complete!</span>
+                        <span>Level Complete</span>
                     ) : null}
                     {this.props.game.stage.mode == "game over" ? (
-                        <span>You died!</span>
+                        <span>You died</span>
                     ) : null}
                 </div>
             </div>

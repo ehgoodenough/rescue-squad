@@ -87,7 +87,7 @@ export default class Player {
         && this.position.y + this.velocity.y - (this.mode == "on ledge" ? this.height : 0) > level.y(this.position.x + this.velocity.x)) {
             this.position.y = level.y(this.position.x + this.velocity.x) + (this.mode == "on ledge" ? this.height : 0)
             if(this.velocity.y > TOO_MUCH_GRAVITY) {
-                // this.game.stage.mode = "game over"
+                this.game.stage.mode = "game over"
             }
             this.velocity.y = 0
             if(this.mode != "on ledge") {

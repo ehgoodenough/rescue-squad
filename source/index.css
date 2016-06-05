@@ -95,14 +95,20 @@ svg {
     }
 
     .message {
-        top: 100px;
-        left: 0px;
-        right: 0px;
-        bottom: 100px;
+        top: 120px;
+        left: 100px;
+        right: 100px;
+        bottom: 120px;
         position: absolute;
 
         color: #FFF;
         font-size: 3em;
         text-align: center;
+
+        $shadow: 0 0 transparent;
+        @for $i from 1 through 10 {
+            $shadow: #{$shadow}, #{$i * -0.01}em #{$i * 0.01}em #222;
+        }
+        text-shadow: $shadow;
     }
 }
