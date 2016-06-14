@@ -6,12 +6,10 @@ const GUI_SIZE = 28
 import {Beagle} from "./Entity.js"
 
 export default class Level {
-    constructor(level, color) {
-        this.color = color
-
-        this.level = level
-
-        this.speed = ((this.level * 2) + 3) / 10
+    constructor(level) {
+        this.color = level.color
+        this.levelnum = level.levelnum
+        this.speed = ((this.levelnum * 2) + 3) / 10
 
         this.points = new Array()
         while(this.points.length < 21) {
@@ -20,9 +18,9 @@ export default class Level {
     }
     addAnotherPoint() {
         if(this.points.length == 0) {
-            var y = this.level * 2 * UNIT
+            var y = this.levelnum * 2 * UNIT
             y += GUI_SIZE
-            y += this.level * OFFSET
+            y += this.levelnum * OFFSET
             y += BUFFER / 2
             y += UNIT
             this.points.push({

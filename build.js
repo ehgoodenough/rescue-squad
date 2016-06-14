@@ -58,6 +58,7 @@ rimraf("./builds", function() {
             new Webpack.DefinePlugin({
                 PATH: JSON.stringify(PATH),
                 STAGE: JSON.stringify(STAGE),
+                PLATFORM: JSON.stringify("DESKTOP"),
                 VERSION: JSON.stringify(JSON.parse(fs.readFileSync("./package.json")).version),
             }),
             STAGE == "PRODUCTION" ? new Webpack.optimize.UglifyJsPlugin() : new Webpack.IgnorePlugin(/^$/),

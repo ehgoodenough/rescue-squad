@@ -6,7 +6,7 @@ import {getDistance} from "../utility/Geometry.js"
 export class Beagle {
     constructor(beagle) {
         this.position = beagle.position
-        this.level = beagle.level
+        this.levelnum = beagle.levelnum
 
         this.width = UNIT * 0.5
         this.height = UNIT * 0.5
@@ -22,8 +22,8 @@ export class Beagle {
             this.velocity.x = this.direction * this.speed
         }
 
-        // collision with level
-        var level = this.game.stage.levels[this.level]
+        // collision with this.levelnum
+        var level = this.stage.levels[this.levelnum]
         this.position.x -= level.speed
         if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY
         || level.y(this.position.x + this.velocity.x) - this.position.y > +VERTICALITY) {
@@ -41,20 +41,20 @@ export class Beagle {
         this.position.y = level.y(this.position.x)
 
         // collision with player
-        if(getDistance(this.position, this.game.stage.player.position) < this.width * 0.75) {
-            this.game.stage.remove("entities", this)
-            this.game.stage.dogs -= 1
+        if(getDistance(this.position, this.stage.player.position) < this.width * 0.75) {
+            this.stage.remove("entities", this)
+            this.stage.dogs -= 1
             this.game.score += 100
-            if(this.game.stage.dogs <= 0) {
-                this.game.stage.dogs = 0
-                this.game.stage.mode = "complete"
+            if(this.stage.dogs <= 0) {
+                this.stage.dogs = 0
+                this.stage.mode = "complete"
             }
         }
 
         // collision with camera
         if(this.position.x <= -1 * this.width) {
-            this.game.stage.remove("entities", this)
-            this.game.stage.mode = "lost a beagle"
+            this.stage.remove("entities", this)
+            this.stage.mode = "lost a beagle"
         }
     }
 }
@@ -62,7 +62,7 @@ export class Beagle {
 export class Equipment {
     constructor(equipment) {
         this.position = equipment.position
-        this.level = equipment.level
+        this.levelnum = equipment.levelnum
 
         this.width = UNIT * 0.4
         this.height = UNIT * 0.4
@@ -73,23 +73,23 @@ export class Equipment {
         this.incline = equipment.incline
     }
     update(delta) {
-        var level = this.game.stage.levels[this.level]
+        var level = this.stage.levels[this.levelnum]
         this.position.x -= level.speed
         this.position.y = level.y(this.position.x)
 
         // collision with player
-        if(getDistance(this.position, this.game.stage.player.position) < this.width * 0.75) {
-            this.game.stage.remove("entities", this)
+        if(getDistance(this.position, this.stage.player.position) < this.width * 0.75) {
+            this.stage.remove("entities", this)
             if(this.type == "parachute") {
-                this.game.stage.player.equipment.parachutes += 1
+                this.stage.player.equipment.parachutes += 1
             } else {
-                this.game.stage.player.equipment.ropes += 1
+                this.stage.player.equipment.ropes += 1
             }
         }
 
         // collision with camera
         if(this.position.x <= -1 * this.width) {
-            this.game.stage.remove("entities", this)
+            this.stage.remove("entities", this)
         }
     }
 }

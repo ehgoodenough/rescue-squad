@@ -9,15 +9,10 @@
     "url": "https://github.com/ehgoodenough/rescue-the-beagles"
   },
   "dependencies": {
-    "afloop": "^1.0.1",
-    "expect.js": "^0.3.1",
-    "firebase": "^2.4.1",
-    "internal-ip": "^1.2.0",
-    "keyb": "^1.0.4",
-    "pixi.js": "^3.0.11",
     "raf": "^3.2.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
+    "screenfull": "^3.0.0",
     "shortid": "^2.2.6",
     "vkey": "^1.0.0"
   },
@@ -44,6 +39,7 @@
     "html-loader": "^0.4.0",
     "image-webpack-loader": "^1.6.2",
     "inliner": "^1.6.1",
+    "internal-ip": "^1.2.0",
     "jsesc": "^0.5.0",
     "json-loader": "^0.5.4",
     "ngrok": "^2.1.7",
