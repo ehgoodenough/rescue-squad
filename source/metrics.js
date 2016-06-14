@@ -90,3 +90,51 @@ jwt.authorize(function(error, tokens) {
         }
     })
 })
+
+return
+
+// requires: <script src="https://apis.google.com/js/client.js" type="text/javascript"></script>
+
+window.setTimeout(function() {
+    var Google = window.gapi
+    console.log("google api loaded")
+    Google.client.setApiKey("AIzaSyAKsk7K3Do7gd7qkPsc1-NNYDeJdmxb2Ss")
+    Google.auth.authorize({
+        client_id: "606610193463-er5b0btg211fmuh98njteqlsbu61p7c6.apps.googleusercontent.com",
+        scope: "https://www.googleapis.com/auth/spreadsheets",
+        //immediate: true
+    }, function(result) {
+        console.log("google api authenticated")
+        Google.client.load("sheets", "v4").then(function() {
+            console.log("google sheets api loaded")
+            Google.client.sheets.spreadsheets.values.get({
+                spreadsheetId: "1DcZ14-SBOGo3OZvj8qrgHS9upB5v6T7XxNYLfGnkg2A",
+                range: "Data!A2:H2",
+            }).then((response) => {
+                console.log(response.result)
+            }, (error) => {
+                console.log(error.result.error)
+            })
+        })
+    })
+    // Google.client.load("urlshortener", "v1").then(() => {
+    //     Google.client.urlshortener.url.get({
+    //         "shortUrl": "http://goo.gl/fbsS"
+    //     }).then((response) => {
+    //         console.log(response.result)
+    //     }, (error) => {
+    //         console.log(error.result.error)
+    //     })
+    // })
+    // Google.client.load("sheets", "v4").then(function() {
+    //     console.log(Google.client.sheets.spreadsheets)
+    //     Google.client.sheets.spreadsheets.values.get({
+    //         spreadsheetId: "1DcZ14-SBOGo3OZvj8qrgHS9upB5v6T7XxNYLfGnkg2A",
+    //         range: "Data!A2:H2",
+    //     }).then((response) => {
+    //         console.log(response.result)
+    //     }, (error) => {
+    //         console.log(error.result.error)
+    //     })
+    // })
+}, 1000)

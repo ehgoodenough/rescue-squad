@@ -15,7 +15,7 @@ export default class Stage {
 
         this.add("player", false, new Player({
             position: {
-                x: 3 * UNIT,
+                x: 3.5 * UNIT,
                 y: 0.5 * UNIT,
             },
             width: 0.5 * UNIT,

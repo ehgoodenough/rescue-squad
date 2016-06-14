@@ -44,7 +44,6 @@ export default class Player {
             }
         } else if(this.mode == "hiking") {
             var distance = this.position.y - this.stage.levels[this.levelnum - 1].y(this.position.x) - this.height
-            console.log(distance)
             return {
                 position: {
                     x: (this.width - 4) * 0.5,

@@ -49,9 +49,6 @@ rimraf("./builds", function() {
                 {test: /\.(mp3|wav)$/i, loader: "url-loader"},
             ]
         },
-        node: {
-            fs: "empty", // for Pixi
-        },
         plugins: [
             new WebpackExtract("css", "index.css"),
             new WebpackExtract("html", "index.html"),
