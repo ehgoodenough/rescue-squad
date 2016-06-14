@@ -3,6 +3,8 @@ const VERTICALITY = 10
 const GRAVITY = 0.9
 const MAX_GRAVITY = 8
 const MAX_FALL_DISTANCE = UNIT * 1.5
+const EQUIPMENT_SPEED = 0.9
+const MAX_VELOCITY_BEFORE_JUMP = 5 // this is for the mechanic where you can jump when you just leave a cliff.
 
 import {UNIT} from "../utility/Constants.js"
 
@@ -29,6 +31,31 @@ export default class Player {
 
         this.stack = 99
     }
+    get child() {
+        if(this.mode == "parachuting") {
+            return {
+                position: {
+                    x: -1 * this.width,
+                    y: -1 * (this.height + 8),
+                },
+                width: this.width * 3,
+                height: this.height,
+                color: "orange",
+            }
+        } else if(this.mode == "hiking") {
+            var distance = this.position.y - this.stage.levels[this.levelnum - 1].y(this.position.x) - this.height
+            console.log(distance)
+            return {
+                position: {
+                    x: (this.width - 4) * 0.5,
+                    y: -1 * distance,
+                },
+                width: 4,
+                height: distance,
+                color: "white"
+            }
+        }
+    }
     update(delta) {
         if(this.position.x - this.stage.levels[this.levelnum].speed > 0) {
             this.position.x -= this.stage.levels[this.levelnum].speed
@@ -38,26 +65,27 @@ export default class Player {
 
         // vertical acceleration from inputs
         if(this.equipment.parachutes > 0
-        && this.inputs["down"].isJustDown(delta)
-        && ["dropping", "falling", "jumping"].indexOf(this.mode) != -1) {
+        && this.inputs.downwards.isJustDown(delta)
+        && this.mode.match(/jumping|falling|dropping/)) {
             this.equipment.parachutes -= 1
             this.mode = "parachuting"
         }
-        if(this.levelnum > 0
+        if(this.levelnum != 0
         && this.equipment.ropes > 0
-        && this.inputs["up"].isJustDown(delta)
-        && ["dropping", "falling", "jumping"].indexOf(this.mode) != -1) {
+        && this.inputs.upwards.isJustDown(delta)
+        && this.mode.match(/jumping|falling|dropping/)) {
             this.equipment.ropes -= 1
             this.mode = "hiking"
         }
-        if(this.mode == "on ground" && this.inputs["up"].isDown()
-        || this.mode == "on ledge" && this.inputs["up"].isJustDown(delta)
-        || this.mode == "falling" && this.velocity.y < 5 && this.inputs["up"].isJustDown(delta)) {
-            this.velocity.y = -1 * this.acceleration.y
-            this.mode = "jumping"
+
+        if(this.mode == "on ground" && this.inputs.upwards.isDown()
+        || this.mode == "on ledge" && this.inputs.upwards.isJustDown(delta)
+        || this.mode == "falling" && this.velocity.y < MAX_VELOCITY_BEFORE_JUMP && this.inputs.upwards.isJustDown(delta)) {
+            this.velocity.y = -this.acceleration.y
             this.jumpdist = this.position.y
+            this.mode = "jumping"
         }
-        if(this.inputs["down"].isJustDown(delta)
+        if(this.inputs.downwards.isJustDown(delta)
         && ["on ledge", "on ground"].indexOf(this.mode) != -1) {
             if(this.levelnum < this.stage.levels.length - 1) {
                 this.mode = "dropping"
@@ -68,27 +96,24 @@ export default class Player {
 
         // horizontal acceleration from inputs
         if(this.mode != "hiking") {
-            if(this.inputs["left"].isDown()) {
+            if(this.inputs.leftwards.isDown()) {
                 this.velocity.x = -1 * this.acceleration.x
             }
-            if(this.inputs["right"].isDown()) {
+            if(this.inputs.rightwards.isDown()) {
                 this.velocity.x = +1 * this.acceleration.x
             }
         }
 
         // vertical acceleration from gravity
-        if(this.mode == "falling"
-        || this.mode == "jumping"
-        || this.mode == "dropping"
-        || this.mode == "on ledge") {
+        if(["falling", "jumping", "dropping", "on ledge"].indexOf(this.mode) != -1) {
             this.velocity.y += GRAVITY
             if(this.velocity.y > MAX_GRAVITY) {
                 this.velocity.y = MAX_GRAVITY
             }
         } else if(this.mode == "parachuting") {
-            this.velocity.y = GRAVITY
+            this.velocity.y = +EQUIPMENT_SPEED
         } else if(this.mode == "hiking") {
-            this.velocity.y = -GRAVITY
+            this.velocity.y = -EQUIPMENT_SPEED
         }
 
         // query level

@@ -21,10 +21,10 @@ export default class Stage {
             width: 0.5 * UNIT,
             height: 0.5 * UNIT,
             inputs: {
-                "up": new Input(["W", "<up>"]),
-                "down": new Input(["S", "<down>"]),
-                "left": new Input(["A", "<left>"]),
-                "right": new Input(["D", "<right>"]),
+                upwards: new Input(["W", "<up>"]),
+                downwards: new Input(["S", "<down>"]),
+                leftwards: new Input(["A", "<left>"]),
+                rightwards: new Input(["D", "<right>"]),
             },
             color: "#FFF",
         }))
@@ -107,7 +107,7 @@ export default class Stage {
         object.key = key
         object.stage = this
         object.game = this.game
-        
+
         if(key === false) {
             this[bucket] = object
         } else {
