@@ -27,7 +27,7 @@ export default class GUI extends React.Component {
                         {pad(this.props.game.score)}
                     </div>
                     <div className="stage">
-                        Level {this.props.game.stage.stagenum}:
+                        Level {this.props.game.stage.stagenum + 1}:
                     </div>
                 </div>
                 <div className="dogs">

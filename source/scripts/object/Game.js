@@ -2,10 +2,13 @@ import Stage from "./Stage.js"
 
 export default class Game {
     constructor(game) {
+        this.stagedata = game.stagedata
+        this.colors = game.colors
+
         this.stage = new Stage(this, {
             colors: game.colors,
-            stagenum: 1,
-            dogs: 3
+            stagenum: 0,
+            dogs: this.stagedata[0]
         })
 
         this.frame = {
@@ -19,5 +22,17 @@ export default class Game {
     }
     update(delta) {
         this.stage.update(delta)
+    }
+    startStage(stagedata) {
+        if(stagedata == undefined) {
+            var stagenum = !!this.stage ? this.stage.stagenum + 1 : 0
+            stagedata = {
+                stagenum: stagenum,
+                dogs: this.stagedata[stagenum],
+                colors: this.colors,
+            }
+        }
+
+        this.stage = new Stage(this, stagedata)
     }
 }

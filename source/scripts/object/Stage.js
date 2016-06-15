@@ -38,7 +38,7 @@ export default class Stage {
 
         this.dogs = stage.dogs || 99
         this.colors = stage.colors || []
-        this.stagenum = stage.stagenum || 1
+        this.stagenum = stage.stagenum || 0
 
         this.entityCountdown = 0
         this.timerToNextStage = 3
@@ -50,11 +50,11 @@ export default class Stage {
             this.timerToNextStage -= delta / 1000
             if(this.timerToNextStage <= 0
             || Input.isJustDown("<space>", delta)) {
-                this.game.stage = new Stage(this.game, {
-                    stagenum: this.stagenum + (this.mode == "complete" ? 1 : 0),
-                    dogs: (this.mode == "complete" ? 5 : this.dogs),
-                    colors: this.colors,
-                })
+                if(this.mode == "complete") {
+                    this.game.startStage()
+                } else {
+                    this.game.startStage(this.toData())
+                }
             }
         } else {
             Object.keys(this.levels).forEach((key) => {
@@ -119,5 +119,12 @@ export default class Stage {
     remove(bucket, object) {
         delete this[bucket][object.key]
         this[bucket].length -= 1
+    }
+    toData() {
+        return {
+            stagenum: this.stagenum,
+            colors: this.colors,
+            dogs: this.dogs,
+        }
     }
 }
