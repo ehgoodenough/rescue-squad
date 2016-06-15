@@ -14,7 +14,7 @@ export default class Game {
         })
 
         this.score = 0
-        this.lives = 3
+        this.lives = 1 || 3
     }
     update(delta) {
         this.stage.update(delta)
