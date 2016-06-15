@@ -53,9 +53,7 @@ export default class Stage {
                 if(this.mode == "complete") {
                     this.game.startStage()
                 } else if(["lost a beagle", "died"].indexOf(this.mode) != -1) {
-
                     this.game.lives -= 1
-                    console.log(this.game.lives)
                     if(this.game.lives > 0) {
                         this.game.startStage(this.toData())
                     } else {
@@ -68,10 +66,7 @@ export default class Stage {
             this.timerToNextStage -= delta / 1000
             if(this.timerToNextStage <= 0
             || Input.isJustDown("<space>", delta)) {
-               delete this.game.stage
-               this.game.startStage()
-               this.game.lives = 0
-               this.game.score = 0
+               this.game.state.newGame()
            }
         } else {
             Object.keys(this.levels).forEach((key) => {

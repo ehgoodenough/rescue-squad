@@ -120,7 +120,7 @@ export default class Player {
 
         // collision with camera
         if(this.position.x + this.velocity.x < 0
-        || this.position.x + this.velocity.x > this.game.frame.width) {
+        || this.position.x + this.velocity.x > this.game.state.frame.width) {
             this.velocity.x = 0
         }
 

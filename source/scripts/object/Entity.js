@@ -32,7 +32,7 @@ export class Beagle {
         }
 
         // collision with camera
-        if(this.velocity.x > 0 && this.position.x + this.velocity.x > this.game.frame.width) {
+        if(this.velocity.x > 0 && this.position.x + this.velocity.x > this.game.state.frame.width) {
             this.direction *= -1
             this.velocity.x = 0
         }
