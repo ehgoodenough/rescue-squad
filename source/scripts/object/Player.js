@@ -59,7 +59,7 @@ export default class Player {
         if(this.position.x - this.stage.levels[this.levelnum].speed > 0) {
             this.position.x -= this.stage.levels[this.levelnum].speed
         } else if(this.stage.levels[this.levelnum].y(this.position.x) - this.position.y < -VERTICALITY) {
-            this.stage.mode = "game over"
+            this.stage.mode = "died"
         }
 
         // vertical acceleration from inputs
@@ -152,7 +152,7 @@ export default class Player {
             this.position.y = level.y(this.position.x + this.velocity.x) + (this.mode == "on ledge" ? this.height : 0)
             if(["jumping", "falling", "dropping"].indexOf(this.mode) != -1) {
                 if(this.position.y - this.jumpdist >= MAX_FALL_DISTANCE) {
-                    this.stage.mode = "game over"
+                    this.stage.mode = "died"
                 }
             }
             this.velocity.y = 0

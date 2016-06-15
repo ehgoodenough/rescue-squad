@@ -5,6 +5,12 @@ export default class GUI extends React.Component {
         return (
             <div className="gui">
                 <div className="bar">
+                    <div className="lives equipment">
+                        <span className="icon"/>
+                        <span className="amount">
+                            {this.props.game.lives}
+                        </span>
+                    </div>
                     <div className="parachute equipment">
                         <span className="icon"/>
                         <span className="amount">
@@ -40,11 +46,14 @@ export default class GUI extends React.Component {
                     {this.props.game.stage.mode == "complete" ? (
                         <span>Level Complete</span>
                     ) : null}
-                    {this.props.game.stage.mode == "game over" ? (
+                    {this.props.game.stage.mode == "died" ? (
                         <span>You died</span>
                     ) : null}
                     {this.props.game.stage.mode == "lost a beagle" ? (
                         <span>BEAGLE LOST</span>
+                    ) : null}
+                    {this.props.game.stage.mode == "game over" ? (
+                        <span>Game Over</span>
                     ) : null}
                 </div>
             </div>

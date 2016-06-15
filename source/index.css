@@ -58,6 +58,10 @@ svg {
             background-color: orange;
         }
 
+        .lives.equipment .icon {
+            background-color: white;
+        }
+
         .rope.equipment .icon {
             background-color: gray;
         }

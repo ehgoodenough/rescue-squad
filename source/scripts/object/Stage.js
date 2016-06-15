@@ -45,17 +45,34 @@ export default class Stage {
     }
     update(delta) {
         if(this.mode == "complete"
-        || this.mode == "game over"
+        || this.mode == "died"
         || this.mode == "lost a beagle") {
             this.timerToNextStage -= delta / 1000
             if(this.timerToNextStage <= 0
             || Input.isJustDown("<space>", delta)) {
                 if(this.mode == "complete") {
                     this.game.startStage()
-                } else {
-                    this.game.startStage(this.toData())
+                } else if(["lost a beagle", "died"].indexOf(this.mode) != -1) {
+
+                    this.game.lives -= 1
+                    console.log(this.game.lives)
+                    if(this.game.lives > 0) {
+                        this.game.startStage(this.toData())
+                    } else {
+                        this.mode = "game over"
+                        this.timerToNextStage = 3
+                    }
                 }
             }
+        } else if(this.mode == "game over") {
+            this.timerToNextStage -= delta / 1000
+            if(this.timerToNextStage <= 0
+            || Input.isJustDown("<space>", delta)) {
+               delete this.game.stage
+               this.game.startStage()
+               this.game.lives = 0
+               this.game.score = 0
+           }
         } else {
             Object.keys(this.levels).forEach((key) => {
                 var level = this.levels[key]
