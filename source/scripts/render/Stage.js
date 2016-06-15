@@ -4,6 +4,9 @@ export default class Stage extends React.Component {
     render() {
         return (
             <svg style={this.style}>
+                {!!this.props.stage.colors[4] ? (
+                    <Sun color={this.props.stage.colors[4]}/>
+                ) : null}
                 {Object.keys(this.props.stage.levels || {}).map((key) => {
                     if(key != "length") {
                         var level = (this.props.stage.levels || {})[key]
@@ -22,6 +25,14 @@ export default class Stage extends React.Component {
             height: "100%",
             backgroundColor: this.props.stage.colors[0],
         }
+    }
+}
+
+class Sun extends React.Component {
+    render() {
+        return (
+            <circle cx="480" cy="140" r="100" fill={this.props.color}/>
+        )
     }
 }
 
