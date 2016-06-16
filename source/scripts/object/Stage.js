@@ -4,6 +4,7 @@ import {Beagle, Equipment} from "./Entity.js"
 
 import {UNIT} from "../utility/Data.js"
 import Input from "../utility/Input.js"
+import {getMidpoint} from "../utility/Geometry.js"
 
 import ShortID from "shortid"
 
@@ -36,12 +37,17 @@ export default class Stage {
             }))
         }
 
-        this.dogs = stage.dogs || 99
+        this.dogs = 9 || stage.dogs || 99
         this.colors = stage.colors || []
         this.stagenum = stage.stagenum || 0
 
         this.entityCountdown = 0
         this.timerToNextStage = 3
+
+        this.spawnqueue = [
+            {class: Beagle, timer: 0, maxtimer: 6},
+            {class: Equipment, timer: 0, maxtimer: 10}
+        ]
     }
     update(delta) {
         if(this.mode == "complete"
@@ -83,32 +89,20 @@ export default class Stage {
             })
             this.player.update(delta)
 
-            this.entityCountdown -= delta / 1000
-            if(this.entityCountdown <= 0) {
-                this.entityCountdown = 5
-                var level = this.levels[Math.floor(Math.random() * this.levels.length)]
-                if(Math.random() < 0.5) {
-                    this.add("entities", undefined, new Beagle({
-                        position: {
-                            x: level.points[level.points.length - 1].x,
-                            y: level.points[level.points.length - 1].y,
-                        },
+
+            this.spawnqueue.forEach((spawn) => {
+                spawn.timer -= delta / 1000
+                if(spawn.timer <= 0) {
+                    spawn.timer = spawn.maxtimer // make random within range
+                    var level = this.levels[Math.floor(Math.random() * this.levels.length)]
+                    var midpoint = getMidpoint(level.points[level.points.length - 1], level.points[level.points.length - 2])
+                    this.add("entities", undefined, new spawn.class({
+                        position: midpoint,
                         levelnum: level.levelnum,
-                    }))
-                } else {
-                    var a = level.points[level.points.length - 2]
-                    var b = level.points[level.points.length - 1]
-                    this.add("entities", undefined, new Equipment({
-                        position: {
-                            x: (a.x + b.x) / 2,
-                            y: (a.y + b.y) / 2
-                        },
-                        levelnum: level.levelnum,
-                        type: Math.random() < 0.5 ? "parachute" : "ropes",
-                        incline: a.y != b.y ? (a.y < b.y ? +45 : -45) : 0,
+                        type: Math.random() < 0.5 ? "parachute" : "ropes", // make this generic for all spawntypes
                     }))
                 }
-            }
+            })
         }
     }
     add(bucket, key, object) {

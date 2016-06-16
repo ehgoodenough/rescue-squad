@@ -24,8 +24,8 @@ export default class Entity extends React.Component {
         }
     }
     get effect() {
-        if(!!this.props.entity.child) {
-            return <EntityEffect effect={this.props.entity.child}/>
+        if(!!this.props.entity.effect) {
+            return <EntityEffect effect={this.props.entity.effect}/>
         }
     }
 }

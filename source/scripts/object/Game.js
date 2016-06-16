@@ -12,7 +12,8 @@ export default class Game {
         this.stage = new Stage(this, {
             colors: game.colors,
             stagenum: 0,
-            dogs: this.stagedata[0]
+            dogs: this.stagedata[0],
+            iteration: 3,
         })
 
         this.score = 0
@@ -28,6 +29,7 @@ export default class Game {
                 stagenum: stagenum,
                 dogs: this.stagedata[stagenum],
                 colors: this.colors,
+                iteration: 3,
             }
         }
 

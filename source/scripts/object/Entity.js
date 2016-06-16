@@ -25,8 +25,7 @@ export class Beagle {
         // collision with this.levelnum
         var level = this.stage.levels[this.levelnum]
         this.position.x -= level.speed
-        if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY
-        || level.y(this.position.x + this.velocity.x) - this.position.y > +VERTICALITY) {
+        if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY) {
             this.direction *= -1
             this.velocity.x = 0
         }
@@ -70,7 +69,7 @@ export class Equipment {
         this.type = equipment.type
         this.color = equipment.type == "parachute" ? "orange" : "gray"
 
-        this.incline = equipment.incline
+        this.incline = equipment.position.r
     }
     update(delta) {
         var level = this.stage.levels[this.levelnum]

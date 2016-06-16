@@ -1,12 +1,12 @@
+import {UNIT} from "../utility/Data.js"
+
 const FRICTION = 0.5
 const VERTICALITY = 10
 const GRAVITY = 0.9
 const MAX_GRAVITY = 8
-const MAX_FALL_DISTANCE = UNIT * 1.5
+const MAX_FALL_DISTANCE = UNIT * 1.9
 const EQUIPMENT_SPEED = 0.9
 const MAX_VELOCITY_BEFORE_JUMP = 5 // this is for the mechanic where you can jump when you just leave a cliff.
-
-import {UNIT} from "../utility/Data.js"
 
 export default class Player {
     constructor(player) {
@@ -31,7 +31,7 @@ export default class Player {
 
         this.stack = 99
     }
-    get child() {
+    get effect() {
         if(this.mode == "parachuting") {
             return {
                 position: {
@@ -43,7 +43,7 @@ export default class Player {
                 color: "orange",
             }
         } else if(this.mode == "hiking") {
-            var distance = this.position.y - this.stage.levels[this.levelnum - 1].y(this.position.x) - this.height
+            var distance = this.position.y - this.stage.levels[this.levelnum].y(this.position.x) - this.height
             return {
                 position: {
                     x: (this.width - 4) * 0.5,
@@ -75,6 +75,7 @@ export default class Player {
         && this.mode.match(/jumping|falling|dropping/)) {
             this.equipment.ropes -= 1
             this.mode = "hiking"
+            this.levelnum -= 1
         }
 
         if(this.mode == "on ground" && this.inputs.upwards.isDown()
@@ -84,13 +85,12 @@ export default class Player {
             this.jumpdist = this.position.y
             this.mode = "jumping"
         }
-        if(this.inputs.downwards.isJustDown(delta)
-        && ["on ledge", "on ground"].indexOf(this.mode) != -1) {
-            if(this.levelnum < this.stage.levels.length - 1) {
-                this.mode = "dropping"
-                this.jumpdist = this.position.y
-                this.levelnum += 1
-            }
+        if(this.mode.match(/on ledge|on ground/)
+        && this.inputs.downwards.isJustDown(delta)
+        && this.levelnum < this.stage.levels.length - 1) {
+            this.jumpdist = this.position.y
+            this.mode = "dropping"
+            this.levelnum += 1
         }
 
         // horizontal acceleration from inputs
@@ -141,7 +141,11 @@ export default class Player {
                 this.levelnum -= 1
             }
         }
-        if(((this.mode == "jumping" && this.velocity.y > 0) || this.mode == "hiking")
+        if(this.mode == "hiking"
+        && this.position.y - this.height < this.stage.levels[this.levelnum].y(this.position.x + this.velocity.x)) {
+            this.mode = "on ledge"
+        }
+        if(((this.mode == "jumping" && this.velocity.y > 0)/* || this.mode == "hiking"*/)
         && this.levelnum > 0 && this.position.y - this.height < this.stage.levels[this.levelnum - 1].y(this.position.x + this.velocity.x)
         && level.y(this.position.x + this.velocity.x) - this.stage.levels[this.levelnum - 1].y(this.position.x + this.velocity.x) > this.height) {
             this.mode = "on ledge"
