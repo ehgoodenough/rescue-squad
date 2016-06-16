@@ -145,7 +145,7 @@ export default class Player {
         && this.position.y - this.height < this.stage.levels[this.levelnum].y(this.position.x + this.velocity.x)) {
             this.mode = "on ledge"
         }
-        if(((this.mode == "jumping" && this.velocity.y > 0)/* || this.mode == "hiking"*/)
+        if(((this.mode == "jumping" && this.velocity.y > 0))
         && this.levelnum > 0 && this.position.y - this.height < this.stage.levels[this.levelnum - 1].y(this.position.x + this.velocity.x)
         && level.y(this.position.x + this.velocity.x) - this.stage.levels[this.levelnum - 1].y(this.position.x + this.velocity.x) > this.height) {
             this.mode = "on ledge"

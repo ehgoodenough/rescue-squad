@@ -1,5 +1,7 @@
 const UNIT = 32
 const VERTICALITY = 10
+const GRAVITY = 0.9
+const MAX_GRAVITY = 8
 
 import {getDistance} from "../utility/Geometry.js"
 
@@ -13,31 +15,48 @@ export class Beagle {
 
         this.color = "#FFF"
 
-        this.velocity = {}
+        this.velocity = {x: 0, y: 0}
         this.direction = -1
         this.speed = 1
+        this.mode = "walking"
     }
     update(delta) {
         if(!this.velocity.x) {
             this.velocity.x = this.direction * this.speed
         }
 
-        // collision with this.levelnum
+        // collision with level
         var level = this.stage.levels[this.levelnum]
         this.position.x -= level.speed
         if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY) {
             this.direction *= -1
             this.velocity.x = 0
+        } else if(level.y(this.position.x + this.velocity.x) - this.position.y > +VERTICALITY) {
+            this.mode = "falling"
         }
-
-        // collision with camera
-        if(this.velocity.x > 0 && this.position.x + this.velocity.x > this.game.state.frame.width) {
+        if(this.position.x + this.velocity.x > level.points[level.points.length - 1].x) {
+            console.log("bounce off edge")
             this.direction *= -1
             this.velocity.x = 0
         }
 
+        if(this.mode == "falling") {
+            this.velocity.y += GRAVITY
+            if(this.velocity.y > MAX_GRAVITY) {
+                this.velocity.y = MAX_GRAVITY
+            }
+            if(this.position.y + this.velocity.y > level.y(this.position.x + this.velocity.x)) {
+                this.velocity.y = 0
+                this.mode = "walking"
+            }
+        }
+
         this.position.x += this.velocity.x
-        this.position.y = level.y(this.position.x)
+        if(this.mode == "walking") {
+            this.position.y = level.y(this.position.x)
+        } else if(this.mode == "falling") {
+            this.position.y += this.velocity.y
+        }
 
         // collision with player
         if(getDistance(this.position, this.stage.player.position) < this.width * 0.75) {
