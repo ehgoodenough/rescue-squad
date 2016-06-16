@@ -27,7 +27,7 @@ rimraf("./builds", function() {
     Webpack({
         entry: {
             "index.js": "./source/index.js",
-            "index.css": "./source/index.css",
+            "index.css": "./source/index.scss",
             "index.html": "./source/index.html",
         },
         output: {

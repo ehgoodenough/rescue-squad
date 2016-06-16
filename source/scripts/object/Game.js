@@ -1,5 +1,7 @@
 import Stage from "./Stage.js"
 
+const INITIAL_LIVES = 3
+
 export default class Game {
     constructor(state, game) {
         this.stagedata = game.stagedata
@@ -14,7 +16,7 @@ export default class Game {
         })
 
         this.score = 0
-        this.lives = 1 || 3
+        this.lives = INITIAL_LIVES
     }
     update(delta) {
         this.stage.update(delta)

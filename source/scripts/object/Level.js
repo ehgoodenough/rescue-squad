@@ -1,4 +1,4 @@
-import {UNIT} from "../utility/Constants.js"
+import {UNIT} from "../utility/Data.js"
 const OFFSET = 8 // gap between each level
 const BUFFER = 360 - (((2 + 2 + 2) * UNIT) + OFFSET + OFFSET)
 const GUI_SIZE = 28

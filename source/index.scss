@@ -1,0 +1,109 @@
+@import "./styles/Font.scss";
+@include font(rescue);
+
+* {
+    margin: 0;
+    padding: 0;
+    cursor: default;
+    user-select: none;
+    box-sizing: border-box;
+    image-rendering: pixelated;
+}
+
+html {
+    color: #EEE;
+    background-color: #111;
+}
+
+$black: #222;
+$white: #EEE;
+$gray: #888;
+
+@mixin text-shadow($size) {
+    $shadow: 0 0 transparent;
+    @for $i from 1 through $size {
+        $shadow: #{$shadow}, #{-$i}px #{$i}px #222
+    }
+    text-shadow: $shadow;
+}
+
+.gui {
+    z-index: 999;
+    position: relative;
+
+    font-size: 12px;
+    font-family: rescue;
+
+    $bar: 28px;
+    $pad: 10px;
+
+    .icon {
+        width: 1em;
+        height: 1em;
+        margin-right: 0.5em;
+        display: inline-block;
+        vertical-align: text-bottom;
+    }
+
+    .bar {
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        height: $bar;
+        line-height: $bar;
+        padding-left: $pad;
+        padding-right: $pad;
+        position: absolute;
+
+        background-color: $black;
+
+        .inventory {
+            float: left;
+
+            .status {
+                margin-right: 3em;
+                display: inline-block;
+            }
+        }
+
+        .progress {
+            float: right;
+
+            .stage {
+                margin-right: 0.5em;
+                color: $gray;
+            }
+        }
+    }
+
+    .rescues {
+        top: $bar;
+        right: 0px;
+        padding: $pad;
+        position: absolute;
+    }
+
+    .message {
+        top: 120px;
+        left: 100px;
+        right: 100px;
+        bottom: 120px;
+        position: absolute;
+
+        color: #EEE;
+        text-align: center;
+        letter-spacing: 2px;
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: $pad;
+            @include text-shadow(5);
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: $pad;
+            @include text-shadow(3);
+        }
+    }
+}

@@ -2,7 +2,7 @@ import Level from "./Level.js"
 import Player from "./Player.js"
 import {Beagle, Equipment} from "./Entity.js"
 
-import {UNIT} from "../utility/Constants.js"
+import {UNIT} from "../utility/Data.js"
 import Input from "../utility/Input.js"
 
 import ShortID from "shortid"

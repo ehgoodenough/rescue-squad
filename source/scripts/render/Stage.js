@@ -23,6 +23,7 @@ export default class Stage extends React.Component {
         return {
             width: "100%",
             height: "100%",
+            position: "absolute",
             backgroundColor: this.props.stage.colors[0],
         }
     }

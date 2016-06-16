@@ -6,7 +6,7 @@ const MAX_FALL_DISTANCE = UNIT * 1.5
 const EQUIPMENT_SPEED = 0.9
 const MAX_VELOCITY_BEFORE_JUMP = 5 // this is for the mechanic where you can jump when you just leave a cliff.
 
-import {UNIT} from "../utility/Constants.js"
+import {UNIT} from "../utility/Data.js"
 
 export default class Player {
     constructor(player) {
