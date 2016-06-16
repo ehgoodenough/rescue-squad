@@ -1,6 +1,6 @@
 import Level from "./Level.js"
 import Player from "./Player.js"
-import {Beagle, Equipment} from "./Entity.js"
+import {Beagle, Equipment, Scientist} from "./Entity.js"
 
 import {UNIT} from "../utility/Data.js"
 import Input from "../utility/Input.js"
@@ -46,7 +46,8 @@ export default class Stage {
 
         this.spawnqueue = [
             {class: Beagle, timer: 0, maxtimer: 6},
-            {class: Equipment, timer: 0, maxtimer: 10}
+            {class: Equipment, timer: 0, maxtimer: 10},
+            {class: Scientist, timer: 0, maxtimer: 10}
         ]
     }
     update(delta) {
@@ -89,7 +90,6 @@ export default class Stage {
             })
             this.player.update(delta)
 
-
             this.spawnqueue.forEach((spawn) => {
                 spawn.timer -= delta / 1000
                 if(spawn.timer <= 0) {
@@ -103,31 +103,6 @@ export default class Stage {
                     }))
                 }
             })
-
-            if(Input.isJustDown("1", delta)) {
-                var level = this.levels[0]
-                var midpoint = getMidpoint(level.points[level.points.length - 1], level.points[level.points.length - 2])
-                this.add("entities", undefined, new Beagle({
-                    position: midpoint,
-                    levelnum: level.levelnum,
-                }))
-            }
-            if(Input.isJustDown("2", delta)) {
-                var level = this.levels[1]
-                var midpoint = getMidpoint(level.points[level.points.length - 1], level.points[level.points.length - 2])
-                this.add("entities", undefined, new Beagle({
-                    position: midpoint,
-                    levelnum: level.levelnum,
-                }))
-            }
-            if(Input.isJustDown("3", delta)) {
-                var level = this.levels[2]
-                var midpoint = getMidpoint(level.points[level.points.length - 1], level.points[level.points.length - 2])
-                this.add("entities", undefined, new Beagle({
-                    position: midpoint,
-                    levelnum: level.levelnum,
-                }))
-            }
         }
     }
     add(bucket, key, object) {

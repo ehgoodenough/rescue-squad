@@ -35,7 +35,6 @@ export class Beagle {
             this.mode = "falling"
         }
         if(this.position.x + this.velocity.x > level.points[level.points.length - 1].x) {
-            console.log("bounce off edge")
             this.direction *= -1
             this.velocity.x = 0
         }
@@ -109,5 +108,22 @@ export class Equipment {
         if(this.position.x <= -1 * this.width) {
             this.stage.remove("entities", this)
         }
+    }
+}
+
+export class Scientist {
+    constructor(scientist) {
+        this.position = scientist.position
+        this.levelnum = scientist.levelnum
+
+        this.width = UNIT * 0.5
+        this.height = UNIT * 0.25
+
+        this.color = "#C00"
+        this.incline = scientist.position.r
+    }
+    update(delta) {
+        var level = this.stage.levels[this.levelnum]
+        this.position.x -= level.speed
     }
 }
