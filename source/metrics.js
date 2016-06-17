@@ -8,13 +8,30 @@ for(var i = 0; i < 30; i++) {
 }
 
 var MINUTE = 60000
+var DAY = 1440 * MINUTE
 var MONTH = 43800 * MINUTE
 
+function toSerialDateNumber(inDate) {
+    inDate = new Date(inDate)
+    var returnDateTime = 25569.0 + ((inDate.getTime() - (inDate.getTimezoneOffset() * 60 * 1000)) / (1000 * 60 * 60 * 24))
+    return returnDateTime.toString().substr(0,20)
+}
+
+function toDateString(date) {
+    if(!(date instanceof Date)) {
+        date = new Date(date)
+    }
+
+    return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " " + (date.getHours() + 1) + ":" + date.getMinutes() + ":" + date.getSeconds()
+}
+
 var datapoints = new Array()
-for(var index = 0; index < 2; index += 1) {
-    var date = Date.now() - Math.floor(Math.random() * (MONTH * 2))
+var AMOUNT_OF_ENTRIES = 12
+for(var index = 0; index < AMOUNT_OF_ENTRIES; index += 1) {
+    //var date = Date.now() - Math.floor(Math.random() * (MONTH * 2))
+    var date = Date.now() - Math.floor(Math.random() * DAY)
     var random = Math.random()
-    var player = players[(index + (random < 1/3 ? +1 : (random < 2/3 ? -1 : 0))) % players.length]
+    var player = players[0] //players[(index + (random < 1/3 ? +1 : (random < 2/3 ? -1 : 0))) % players.length]
     player.session = player.session || ShortID.generate()
     player.session = Math.random() < 0.5 ? player.session : ShortID.generate()
     datapoints.push({
@@ -39,8 +56,8 @@ for(var index in datapoints) {
                         {"userEnteredValue": {"stringValue": datapoints[index].player}},
                         {"userEnteredValue": {"stringValue": datapoints[index].session}},
                         {"userEnteredValue": {"stringValue": datapoints[index].game}},
-                        {"userEnteredValue": {"numberValue": datapoints[index].startTime}},
-                        {"userEnteredValue": {"numberValue": datapoints[index].endTime}},
+                        {"userEnteredValue": {"stringValue": toDateString(datapoints[index].startTime)}},
+                        {"userEnteredValue": {"stringValue": toDateString(datapoints[index].endTime)}},
                         {"userEnteredValue": {"numberValue": datapoints[index].lastLevel}},
                         {"userEnteredValue": {"boolValue": datapoints[index].didFinishGame}},
                     ]
@@ -93,48 +110,49 @@ jwt.authorize(function(error, tokens) {
 
 return
 
+// requires: babel
 // requires: <script src="https://apis.google.com/js/client.js" type="text/javascript"></script>
 
-window.setTimeout(function() {
-    var Google = window.gapi
-    console.log("google api loaded")
-    Google.client.setApiKey("AIzaSyAKsk7K3Do7gd7qkPsc1-NNYDeJdmxb2Ss")
-    Google.auth.authorize({
-        client_id: "606610193463-er5b0btg211fmuh98njteqlsbu61p7c6.apps.googleusercontent.com",
-        scope: "https://www.googleapis.com/auth/spreadsheets",
-        //immediate: true
-    }, function(result) {
-        console.log("google api authenticated")
-        Google.client.load("sheets", "v4").then(function() {
-            console.log("google sheets api loaded")
-            Google.client.sheets.spreadsheets.values.get({
-                spreadsheetId: "1DcZ14-SBOGo3OZvj8qrgHS9upB5v6T7XxNYLfGnkg2A",
-                range: "Data!A2:H2",
-            }).then((response) => {
-                console.log(response.result)
-            }, (error) => {
-                console.log(error.result.error)
-            })
-        })
-    })
-    // Google.client.load("urlshortener", "v1").then(() => {
-    //     Google.client.urlshortener.url.get({
-    //         "shortUrl": "http://goo.gl/fbsS"
-    //     }).then((response) => {
-    //         console.log(response.result)
-    //     }, (error) => {
-    //         console.log(error.result.error)
-    //     })
-    // })
-    // Google.client.load("sheets", "v4").then(function() {
-    //     console.log(Google.client.sheets.spreadsheets)
-    //     Google.client.sheets.spreadsheets.values.get({
-    //         spreadsheetId: "1DcZ14-SBOGo3OZvj8qrgHS9upB5v6T7XxNYLfGnkg2A",
-    //         range: "Data!A2:H2",
-    //     }).then((response) => {
-    //         console.log(response.result)
-    //     }, (error) => {
-    //         console.log(error.result.error)
-    //     })
-    // })
-}, 1000)
+// window.setTimeout(function() {
+//     var Google = window.gapi
+//     console.log("google api loaded")
+//     Google.client.setApiKey("AIzaSyAKsk7K3Do7gd7qkPsc1-NNYDeJdmxb2Ss")
+//     Google.auth.authorize({
+//         client_id: "606610193463-er5b0btg211fmuh98njteqlsbu61p7c6.apps.googleusercontent.com",
+//         scope: "https://www.googleapis.com/auth/spreadsheets",
+//         //immediate: true
+//     }, function(result) {
+//         console.log("google api authenticated")
+//         Google.client.load("sheets", "v4").then(function() {
+//             console.log("google sheets api loaded")
+//             Google.client.sheets.spreadsheets.values.get({
+//                 spreadsheetId: "1DcZ14-SBOGo3OZvj8qrgHS9upB5v6T7XxNYLfGnkg2A",
+//                 range: "Data!A2:H2",
+//             }).then((response) => {
+//                 console.log(response.result)
+//             }, (error) => {
+//                 console.log(error.result.error)
+//             })
+//         })
+//     })
+//     // Google.client.load("urlshortener", "v1").then(() => {
+//     //     Google.client.urlshortener.url.get({
+//     //         "shortUrl": "http://goo.gl/fbsS"
+//     //     }).then((response) => {
+//     //         console.log(response.result)
+//     //     }, (error) => {
+//     //         console.log(error.result.error)
+//     //     })
+//     // })
+//     // Google.client.load("sheets", "v4").then(function() {
+//     //     console.log(Google.client.sheets.spreadsheets)
+//     //     Google.client.sheets.spreadsheets.values.get({
+//     //         spreadsheetId: "1DcZ14-SBOGo3OZvj8qrgHS9upB5v6T7XxNYLfGnkg2A",
+//     //         range: "Data!A2:H2",
+//     //     }).then((response) => {
+//     //         console.log(response.result)
+//     //     }, (error) => {
+//     //         console.log(error.result.error)
+//     //     })
+//     // })
+// }, 1000)
