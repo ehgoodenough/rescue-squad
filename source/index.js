@@ -10,7 +10,7 @@
 if(STAGE == "PRODUCTION") {
     console.log("Rescue the Beagles is a game by Nenad Jalsovec in 2008.")
     console.log("%chttp://www.16x16.org/category/rescue-the-beagles", "color: #00C")
-    console.log("This is just a remake.")
+    console.log("This is just a tribute.")
 }
 
 /////////////////////////

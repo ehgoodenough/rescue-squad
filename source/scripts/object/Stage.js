@@ -37,7 +37,7 @@ export default class Stage {
             }))
         }
 
-        this.dogs = 9 || stage.dogs || 99
+        this.dogs = stage.dogs || 99
         this.colors = stage.colors || []
         this.stagenum = stage.stagenum || 0
 
