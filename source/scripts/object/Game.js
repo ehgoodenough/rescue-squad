@@ -1,37 +1,45 @@
 import Stage from "./Stage.js"
 
-const INITIAL_LIVES = 3
+import {PROTOSTAGES} from "../utility/Data.js"
+import {INITIAL_CONTINUES} from "../utility/Data.js"
 
 export default class Game {
-    constructor(state, game) {
-        this.stagedata = game.stagedata
-
+    constructor(state) {
         this.state = state
 
-        this.stage = new Stage(this, {
-            stagenum: 0,
-            colors: this.stagedata[0].colors,
-            dogs: this.stagedata[0].rescues,
-            iteration: 3,
-        })
-
         this.score = 0
-        this.lives = INITIAL_LIVES
+        this.continues = INITIAL_CONTINUES
+
+        this.stage = new Stage(this, this.getProtostage(0))
     }
     update(delta) {
         this.stage.update(delta)
     }
-    startStage(stagedata) {
-        if(stagedata == undefined) {
+    restart() {
+        this.state.game = new Game(this.state)
+    }
+    startStage(protostage) {
+        if(protostage == undefined) {
             var stagenum = !!this.stage ? this.stage.stagenum + 1 : 0
-            stagedata = {
-                stagenum: stagenum,
-                dogs: this.stagedata[stagenum].rescues,
-                colors: this.stagedata[stagenum].colors,
-                iteration: 3,
-            }
+            protostage = this.getProtostage(stagenum)
         }
 
-        this.stage = new Stage(this, stagedata)
+        this.stage = new Stage(this, protostage)
+    }
+    getProtostage(stagenum) {
+        if(PROTOSTAGES[stagenum]) {
+            return PROTOSTAGES[stagenum]
+        } else {
+            return {
+                rescues: 3,
+                colors: [
+                    "#EEE",
+                    "#666",
+                    "#444",
+                    "#222",
+                ],
+                entities: []
+            }
+        }
     }
 }

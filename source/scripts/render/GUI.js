@@ -8,7 +8,7 @@ export default class GUI extends React.Component {
                     <div className="inventory">
                         <div className="continues status">
                             <span className="icon" style={{backgroundColor: "white"}}/>
-                            <span>{this.props.game.lives}</span>
+                            <span>{this.props.game.continues}</span>
                         </div>
                         <div className="parachutes status">
                             <span className="icon" style={{backgroundColor: "orange"}}/>
@@ -30,7 +30,7 @@ export default class GUI extends React.Component {
                 </div>
                 <div className="rescues status">
                     <span className="icon" style={{backgroundColor: "white"}}/>
-                    <span>{this.props.game.stage.dogs}</span>
+                    <span>{this.props.game.stage.rescues}</span>
                 </div>
                 {this.props.game.stage.mode == "complete" ? (
                     <div className="message">

@@ -10,10 +10,11 @@ const MAX_VELOCITY_BEFORE_JUMP = 5 // this is for the mechanic where you can jum
 
 export default class Player {
     constructor(player) {
-        this.position = player.position
+        this.position = {x: 3.5 * UNIT, y: 0.5 * UNIT}
+        this.width = 0.5 * UNIT
+        this.height = 0.5 * UNIT
+
         this.inputs = player.inputs
-        this.width = player.width
-        this.height = player.height
         this.color = player.color
 
         this.levelnum = 0

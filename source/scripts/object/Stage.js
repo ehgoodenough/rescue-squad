@@ -9,18 +9,12 @@ import {getMidpoint} from "../utility/Geometry.js"
 import ShortID from "shortid"
 
 export default class Stage {
-    constructor(game, stage) {
+    constructor(game, protostage) {
         this.game = game
 
         this.entities = new Object()
 
         this.add("player", false, new Player({
-            position: {
-                x: 3.5 * UNIT,
-                y: 0.5 * UNIT,
-            },
-            width: 0.5 * UNIT,
-            height: 0.5 * UNIT,
             inputs: {
                 upwards: new Input(["W", "<up>"]),
                 downwards: new Input(["S", "<down>"]),
@@ -32,23 +26,22 @@ export default class Stage {
 
         for(var levelnum = 0; levelnum < 3; levelnum += 1) {
             this.add("levels", levelnum, new Level({
-                color: stage.colors[levelnum + 1],
+                color: protostage.colors[levelnum + 1],
                 levelnum: levelnum,
             }))
         }
 
-        this.dogs = stage.dogs || 99
-        this.colors = stage.colors || []
-        this.stagenum = stage.stagenum || 0
+        this.rescues = protostage.rescues || 99
+        this.colors = protostage.colors || []
+        this.stagenum = protostage.stagenum || 0
+        this.spawnqueue = [
+            {class: Beagle, timer: 0, maxtimer: 6},
+            {class: Equipment, timer: 0, maxtimer: 10, types: ["parachute", "rope"]},
+            {class: Scientist, timer: 0, maxtimer: 10, types: ["blob", "biohazdude"]}
+        ]
 
         this.entityCountdown = 0
         this.timerToNextStage = 3
-
-        this.spawnqueue = [
-            {class: Beagle, timer: 0, maxtimer: 6},
-            {class: Equipment, timer: 0, maxtimer: 10},
-            {class: Scientist, timer: 0, maxtimer: 10}
-        ]
     }
     update(delta) {
         if(this.mode == "complete"
@@ -60,8 +53,8 @@ export default class Stage {
                 if(this.mode == "complete") {
                     this.game.startStage()
                 } else if(["lost a beagle", "died"].indexOf(this.mode) != -1) {
-                    this.game.lives -= 1
-                    if(this.game.lives > 0) {
+                    this.game.continues -= 1
+                    if(this.game.continues > 0) {
                         this.game.startStage(this.toData())
                     } else {
                         this.mode = "game over"
@@ -73,7 +66,7 @@ export default class Stage {
             this.timerToNextStage -= delta / 1000
             if(this.timerToNextStage <= 0
             || Input.isJustDown("<space>", delta)) {
-               this.game.state.newGame()
+               this.game.restart()
            }
         } else {
             Object.keys(this.levels).forEach((key) => {
@@ -99,7 +92,7 @@ export default class Stage {
                     this.add("entities", undefined, new spawn.class({
                         position: midpoint,
                         levelnum: level.levelnum,
-                        type: Math.random() < 0.5 ? "parachute" : "ropes", // make this generic for all spawntypes
+                        type: !!spawn.types ? spawn.types[Math.floor(Math.random() * spawn.types.length)] : undefined
                     }))
                 }
             })
@@ -130,7 +123,7 @@ export default class Stage {
         return {
             stagenum: this.stagenum,
             colors: this.colors,
-            dogs: this.dogs,
+            rescues: this.rescues,
         }
     }
 }

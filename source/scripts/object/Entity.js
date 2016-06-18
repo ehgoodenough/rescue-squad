@@ -60,10 +60,10 @@ export class Beagle {
         // collision with player
         if(getDistance(this.position, this.stage.player.position) < this.width * 0.75) {
             this.stage.remove("entities", this)
-            this.stage.dogs -= 1
+            this.stage.rescues -= 1
             this.game.score += 100
-            if(this.stage.dogs <= 0) {
-                this.stage.dogs = 0
+            if(this.stage.rescues <= 0) {
+                this.stage.rescues = 0
                 this.stage.mode = "complete"
             }
         }
@@ -115,15 +115,74 @@ export class Scientist {
     constructor(scientist) {
         this.position = scientist.position
         this.levelnum = scientist.levelnum
+        this.type = scientist.type
 
-        this.width = UNIT * 0.5
-        this.height = UNIT * 0.25
+        if(scientist.type == "blob") {
+            this.width = UNIT * 0.5
+            this.height = UNIT * 0.25
 
-        this.color = "#C00"
-        this.incline = scientist.position.r
+            this.color = "#C00"
+            this.incline = scientist.position.r
+        } else if(scientist.type == "biohazdude") {
+            this.width = UNIT * 0.5
+            this.height = UNIT * 0.7
+            this.color = "#444"
+
+            this.velocity = {x: 0, y: 0}
+            this.distance = 2000
+            this.mode = "walking"
+            this.direction = -1
+            this.speed = 0.5
+        }
     }
     update(delta) {
         var level = this.stage.levels[this.levelnum]
         this.position.x -= level.speed
+
+        if(this.type == "biohazdude") {
+            if(this.mode == "walking") {
+                if(this.velocity.x == 0) {
+                    this.velocity.x = this.direction * this.speed
+                }
+            } else if(this.mode == "waiting"){
+                this.velocity.x = 0
+            }
+
+            // collision with level; bounce off cliffs and right side of the screen
+            if(level.y(this.position.x + this.velocity.x) - this.position.y < -VERTICALITY
+            || level.y(this.position.x + this.velocity.x) - this.position.y > +VERTICALITY) {
+                this.direction *= -1
+                this.velocity.x = 0
+            }
+            if(this.position.x + this.velocity.x > level.points[level.points.length - 1].x) {
+                this.direction *= -1
+                this.velocity.x = 0
+            }
+
+            // translation
+            this.position.x += this.velocity.x
+            this.position.y = level.y(this.position.x)
+
+            this.distance -= delta
+            if(this.distance <= 0) {
+                if(this.mode == "walking") {
+                    this.mode = "waiting"
+                    this.distance = Math.random() * 1000 + 1000
+                } else {
+                    this.mode = "walking"
+                    this.distance = Math.random() * 3000 + 2000
+                }
+            }
+        }
+
+        // collision with player
+        if(getDistance(this.position, this.stage.player.position) < this.width) {
+            this.stage.mode = "died"
+        }
+
+        // collision with camera
+        if(this.position.x <= -1 * this.width) {
+            this.stage.remove("entities", this)
+        }
     }
 }
